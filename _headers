@@ -1,0 +1,14 @@
+# Security headers, applied by Cloudflare to every response.
+# script-src allows inline scripts because the GTM container (GTM-TTJX54) injects
+# Custom HTML tags inline. If a new GTM tag loads a script from another domain,
+# add it to script-src (and connect-src if it sends data), or the browser blocks it.
+# img-src allows any https image because Google Signals pixels use country domains.
+/*
+  X-Robots-Tag: noindex, nofollow, noarchive, nosnippet, noimageindex, noai, noimageai
+  Strict-Transport-Security: max-age=31536000
+  Content-Security-Policy: default-src 'none'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://*.googletagmanager.com https://*.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://cloudflareinsights.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.g.doubleclick.net https://*.google.com; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: no-referrer
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()
+  Cross-Origin-Opener-Policy: same-origin

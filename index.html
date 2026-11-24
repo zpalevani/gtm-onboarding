@@ -1,0 +1,1573 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script async src="https://www.googletagmanager.com/gtm.js?id=GTM-TTJX54"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex, noai, noimageai">
+<meta name="description" content="Onboarding reference and hands-on workbook for teams learning Google Tag Manager: containers, tags, triggers, the data layer, consent mode, server-side tagging and the Google tag gateway, glossary, common problems, a 30-day checklist and a scenario lab.">
+<script>try{var t=localStorage.getItem("gtm-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+<style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<title>GTM Team Onboarding</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap">
+<style>
+/* Layout: a workbook that doubles as a deck. Scroll mode = sticky TOC rail + one centered column per slide.
+   Present mode = one slide fills the screen, arrow keys to move. Slide counter is styled like an event chip.
+   Color: a calm mid-blue carries the learning content. Blue is linked to better performance on open,
+   exploratory tasks (Mehta & Zhu, Science, 2009). Green marks completion, since brief exposure to green
+   has been linked to creative performance (Lichtenfeld et al., 2012). Neutrals lean slightly blue
+   and contrast stays high, which matters more for reading than hue does. */
+:root {
+  --bg: #F4F6FA;
+  --surface: #FFFFFF;
+  --surface-2: #E8EDF5;
+  --ink: #141C2B;
+  --muted: #536079;
+  --line: #D3DAE6;
+  --accent: #2456B3;
+  --accent-ink: #FFFFFF;
+  --accent-soft: #E2EBFA;
+  --tier360: #8C5300;
+  --tier360-soft: #FAEAD2;
+  --danger: #AC2B1F;
+  --danger-soft: #FBE4E1;
+  --ok: #1D7A45;
+  --ok-soft: #DDF2E5;
+  --f-display: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  --f-body: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --radius: 10px;
+  --topbar-h: 56px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E131C; --surface: #151C28; --surface-2: #1C2535; --ink: #E3E9F2; --muted: #9AA6BC; --line: #2A3447;
+    --accent: #82A9F2; --accent-ink: #0B1730; --accent-soft: #1A2A48;
+    --tier360: #F1B661; --tier360-soft: #3A2A12;
+    --danger: #F2887D; --danger-soft: #3C1A16; --ok: #74D29C; --ok-soft: #173525;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E131C; --surface: #151C28; --surface-2: #1C2535; --ink: #E3E9F2; --muted: #9AA6BC; --line: #2A3447;
+  --accent: #82A9F2; --accent-ink: #0B1730; --accent-soft: #1A2A48;
+  --tier360: #F1B661; --tier360-soft: #3A2A12;
+  --danger: #F2887D; --danger-soft: #3C1A16; --ok: #74D29C; --ok-soft: #173525;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; animation: none !important; } }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--f-body); font-size: 16px; line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3 { font-family: var(--f-display); line-height: 1.15; text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+h1 { font-size: clamp(2.1rem, 5vw, 3.4rem); font-weight: 700; }
+h2 { font-size: clamp(1.6rem, 3.4vw, 2.3rem); font-weight: 600; }
+h3 { font-size: 1.1rem; font-weight: 600; }
+p { margin: 0; }
+a { color: var(--accent); text-underline-offset: 3px; }
+code, .ev { font-family: var(--f-mono); font-size: 0.86em; }
+.ev { background: var(--surface-2); border: 1px solid var(--line); border-radius: 5px; padding: 0.05em 0.4em; white-space: nowrap; }
+kbd { font-family: var(--f-mono); font-size: 0.8em; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 5px; padding: 0.05em 0.45em; background: var(--surface); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+button { font: inherit; color: inherit; cursor: pointer; }
+.muted { color: var(--muted); }
+.lead { font-size: 1.12rem; color: var(--muted); max-width: 65ch; }
+
+/* ---------- theme toggle ---------- */
+.theme-btn .sun { display: none; }
+.theme-btn .moon { display: block; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .theme-btn .sun { display: block; } :root:not([data-theme="light"]) .theme-btn .moon { display: none; } }
+:root[data-theme="dark"] .theme-btn .sun { display: block; }
+:root[data-theme="dark"] .theme-btn .moon { display: none; }
+
+/* ---------- top bar ---------- */
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
+.topbar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 9;
+  height: var(--topbar-h);
+  display: flex; align-items: center; gap: 12px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  background: var(--surface); border-bottom: 1px solid var(--line);
+}
+.brand { font-family: var(--f-display); font-weight: 600; font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.brand span { color: var(--muted); font-weight: 500; }
+.topbar .spacer { flex: 1; }
+.mini-progress { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: var(--muted); white-space: nowrap; }
+.mini-progress .track { width: 90px; height: 6px; border-radius: 3px; background: var(--surface-2); overflow: hidden; }
+.mini-progress .fill { height: 100%; width: 0; background: var(--accent); transition: width .3s; }
+@media (max-width: 560px) { .mini-progress .track { display: none; } }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  border: 1px solid var(--line); background: var(--surface); border-radius: 8px;
+  padding: 7px 14px; font-size: 0.9rem; font-weight: 500; white-space: nowrap;
+}
+.btn:hover { border-color: var(--accent); }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.btn.primary:hover { filter: brightness(1.08); }
+.btn svg { width: 16px; height: 16px; flex: none; }
+
+/* ---------- layout ---------- */
+.layout { display: grid; grid-template-columns: 1fr; }
+@media (min-width: 1180px) { .layout { grid-template-columns: 240px minmax(0, 1fr); } }
+.toc {
+  display: none;
+  position: sticky; top: calc(env(safe-area-inset-top, 0px) + var(--topbar-h)); align-self: start;
+  max-height: calc(100vh - var(--topbar-h)); overflow-y: auto;
+  padding: 28px 12px 28px max(16px, env(safe-area-inset-left, 0px));
+  border-right: 1px solid var(--line);
+}
+@media (min-width: 1180px) { .toc { display: block; } }
+.toc h4 { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 18px 10px 6px; font-weight: 600; }
+.toc h4:first-child { margin-top: 0; }
+.toc a { display: block; padding: 5px 10px; border-radius: 6px; color: var(--muted); text-decoration: none; font-size: 0.9rem; line-height: 1.35; }
+.toc a:hover { color: var(--ink); background: var(--surface-2); }
+.toc a.active { color: var(--accent); background: var(--accent-soft); font-weight: 500; }
+
+#deck { min-width: 0; }
+.slide {
+  padding-block: 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  border-bottom: 1px solid var(--line);
+  scroll-margin-top: calc(env(safe-area-inset-top, 0px) + var(--topbar-h));
+}
+.slide-inner { max-width: 980px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+.slide-head { display: flex; flex-direction: column; gap: 10px; }
+.eyebrow { font-size: 0.76rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.09em; color: var(--accent); }
+.eyebrow.p360 { color: var(--tier360); }
+
+/* ---------- present mode ---------- */
+.presentbar { display: none; }
+body.present { overflow: hidden; }
+body.present .topbar, body.present .toc { display: none; }
+body.present #deck {
+  position: fixed; inset: 0; z-index: 20; background: var(--bg);
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+}
+body.present .slide { display: none; height: 100%; overflow-y: auto; border: 0; padding-block: clamp(28px, 6vh, 72px); }
+body.present .slide.current { display: block; }
+body.present .slide-inner { max-width: 1100px; font-size: clamp(16px, 1.25vw, 19px); }
+body.present .presentbar {
+  display: flex; align-items: center; gap: 12px;
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 21;
+  height: calc(64px + env(safe-area-inset-bottom, 0px));
+  padding: 0 max(16px, env(safe-area-inset-right, 0px)) env(safe-area-inset-bottom, 0px) max(16px, env(safe-area-inset-left, 0px));
+  background: var(--surface); border-top: 1px solid var(--line);
+}
+.presentbar .bar { position: absolute; top: -1px; left: 0; height: 3px; background: var(--accent); transition: width .25s; }
+.event-chip { font-family: var(--f-mono); font-size: 0.82rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.event-chip b { color: var(--accent); font-weight: 500; }
+.presentbar .spacer { flex: 1; }
+.icon-btn { display: inline-grid; place-items: center; width: 40px; height: 40px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); }
+.icon-btn:hover { border-color: var(--accent); }
+.icon-btn svg { width: 18px; height: 18px; }
+@media (max-width: 980px) { .presentbar .hint { display: none; } }
+@media (max-width: 600px) { .task-link { grid-template-columns: 1fr; gap: 4px; } }
+
+/* ---------- welcome ---------- */
+.welcome .slide-inner { gap: 32px; }
+.title-block { display: flex; flex-direction: column; gap: 18px; padding-top: 12px; }
+.stream-line { display: flex; flex-wrap: wrap; gap: 8px; }
+.how { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; font-size: 0.92rem; color: var(--muted); }
+.acts { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; }
+.act { display: flex; flex-direction: column; gap: 6px; padding: 18px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); text-decoration: none; color: var(--ink); }
+.act:hover { border-color: var(--accent); }
+.act .eyebrow { font-size: 0.7rem; }
+.act p { color: var(--muted); font-size: 0.92rem; }
+
+/* ---------- tables ---------- */
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+table { width: 100%; border-collapse: collapse; font-size: 0.93rem; min-width: 640px; }
+th, td { text-align: left; vertical-align: top; padding: 12px 16px; border-bottom: 1px solid var(--line); }
+tr:last-child td { border-bottom: 0; }
+thead th { font-family: var(--f-display); font-size: 0.95rem; background: var(--surface-2); position: relative; }
+tbody th { font-weight: 600; width: 22%; }
+td.std, th.std, td.p360, th.p360 { transition: background .2s; }
+
+/* ---------- features ---------- */
+.feature-cols { display: grid; grid-template-columns: 1fr; gap: 28px; }
+@media (min-width: 860px) { .feature-cols { grid-template-columns: 1.15fr 1fr; } }
+.feature-col { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.col-label { display: flex; align-items: center; gap: 10px; }
+.badge { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; padding: 3px 8px; border-radius: 99px; background: var(--accent-soft); color: var(--accent); white-space: nowrap; }
+.badge.p360 { background: var(--tier360-soft); color: var(--tier360); }
+.badge.danger { background: var(--danger-soft); color: var(--danger); }
+.feat-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; border-top: 1px solid var(--line); }
+.feat-list li { padding: 12px 0; border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: 2px; }
+.feat-list strong { font-weight: 600; }
+.feat-list span { color: var(--muted); font-size: 0.92rem; }
+
+/* ---------- ecosystem ---------- */
+.eco { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; align-items: center; gap: 10px; }
+.eco .outs { display: flex; flex-direction: column; gap: 10px; }
+.node {
+  text-align: left; display: flex; flex-direction: column; gap: 4px;
+  padding: 16px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line);
+}
+.node:hover { border-color: var(--accent); }
+.node[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent) inset; }
+.node .nm { font-family: var(--f-display); font-weight: 600; font-size: 1.02rem; }
+.node .rl { font-size: 0.82rem; color: var(--muted); }
+.node.core { background: var(--accent-soft); }
+.arrow { display: flex; flex-direction: column; align-items: center; gap: 2px; color: var(--muted); }
+.arrow svg { width: 34px; height: 14px; }
+.arrow small { font-family: var(--f-mono); font-size: 0.7rem; }
+@media (max-width: 760px) {
+  .eco { grid-template-columns: 1fr; }
+  .arrow svg { transform: rotate(90deg); margin: 8px 0; }
+  .arrow { flex-direction: row; justify-content: center; gap: 8px; }
+}
+.eco-detail { display: grid; grid-template-columns: 1fr; gap: 16px; padding: 20px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line); }
+@media (min-width: 760px) { .eco-detail { grid-template-columns: 1fr 1fr; } }
+.eco-detail h3 { grid-column: 1 / -1; }
+.kv { display: flex; flex-direction: column; gap: 4px; }
+.kv .k { font-size: 0.74rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+
+/* ---------- text inputs ---------- */
+textarea {
+  font: inherit; font-size: 0.95rem; color: var(--ink); background: var(--surface);
+  border: 1px solid var(--line); border-radius: 8px; padding: 9px 12px; width: 100%;
+}
+textarea::placeholder { color: var(--muted); opacity: 0.75; }
+textarea:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: var(--accent); }
+
+/* ---------- glossary ---------- */
+.toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.terms { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+.term {
+  text-align: left; display: flex; flex-direction: column; gap: 8px;
+  padding: 16px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line);
+  cursor: default;
+}
+.term .t { font-family: var(--f-display); font-weight: 600; font-size: 1.02rem; }
+.term .d { font-size: 0.9rem; color: var(--muted); }
+.term .tap { display: none; font-size: 0.8rem; color: var(--accent); font-weight: 500; }
+.quiz .term { cursor: pointer; }
+.quiz .term:hover { border-color: var(--accent); }
+.quiz .term:not(.revealed) .d { display: none; }
+.quiz .term:not(.revealed) .tap { display: block; }
+
+/* ---------- pitfalls ---------- */
+.pitfalls { display: flex; flex-direction: column; gap: 10px; }
+details.pit { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+details.pit summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 12px; padding: 14px 18px; font-weight: 600; }
+details.pit summary::-webkit-details-marker { display: none; }
+details.pit summary .chev { margin-left: auto; transition: transform .2s; color: var(--muted); flex: none; }
+details.pit[open] summary .chev { transform: rotate(90deg); }
+details.pit summary .sym { min-width: 0; }
+.pit-body { display: grid; grid-template-columns: 1fr; gap: 16px; padding: 0 18px 18px; }
+@media (min-width: 760px) { .pit-body { grid-template-columns: 1fr 1fr; } }
+details.pit.urgent { border-color: var(--danger); }
+
+/* ---------- checklist ---------- */
+.progress-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.big-track { flex: 1; min-width: 160px; height: 10px; background: var(--surface-2); border-radius: 5px; overflow: hidden; }
+.big-track .fill { height: 100%; width: 0; background: var(--accent); transition: width .3s; }
+.weeks { display: grid; grid-template-columns: 1fr; gap: 14px; }
+@media (min-width: 820px) { .weeks { grid-template-columns: 1fr 1fr; } }
+.week { display: flex; flex-direction: column; gap: 4px; padding: 18px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+.week header { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 6px; }
+.week header .wk { font-family: var(--f-mono); font-size: 0.78rem; color: var(--muted); white-space: nowrap; }
+.check { display: grid; grid-template-columns: 22px 1fr; gap: 10px; align-items: start; padding: 7px 0; font-size: 0.93rem; cursor: pointer; }
+.check input { width: 18px; height: 18px; margin: 3px 0 0; accent-color: var(--accent); cursor: pointer; }
+.check input:checked + span { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--line); }
+
+/* ---------- lab ---------- */
+.setup-callout { display: flex; flex-direction: column; gap: 6px; padding: 16px 18px; border-radius: var(--radius); background: var(--accent-soft); }
+.task-list { display: grid; grid-template-columns: 1fr; gap: 10px; }
+.task-link { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 14px; align-items: center; padding: 14px 18px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); text-decoration: none; color: var(--ink); }
+.task-link:hover { border-color: var(--accent); }
+.task-link .num { font-family: var(--f-mono); font-size: 0.8rem; color: var(--muted); }
+.task-link .st { font-size: 0.75rem; font-weight: 600; color: var(--muted); white-space: nowrap; }
+.task-link .st.done { color: var(--ok); }
+.check input { accent-color: var(--ok); }
+.task-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+@media (min-width: 900px) { .task-grid { grid-template-columns: 1fr 1fr; align-items: start; } }
+.panel { display: flex; flex-direction: column; gap: 10px; padding: 18px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); min-width: 0; }
+.panel .k { font-size: 0.74rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+textarea { min-height: 120px; resize: vertical; line-height: 1.5; }
+.reveal { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+.reveal summary { overflow-wrap: anywhere; cursor: pointer; padding: 12px 16px; font-weight: 600; color: var(--accent); }
+.reveal > div { padding: 0 16px 16px; overflow-wrap: anywhere; }
+.reveal ol li, .reveal p { line-height: 1.55; }
+.ev { white-space: normal; overflow-wrap: anywhere; }
+.reveal ol { margin: 0; padding-left: 1.3em; display: flex; flex-direction: column; gap: 6px; }
+.reveal.check-ans summary { color: var(--ok); }
+.path { font-family: var(--f-mono); font-size: 0.84em; }
+.saved { font-size: 0.8rem; color: var(--muted); min-height: 1.2em; }
+
+/* ---------- finish ---------- */
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+.stat { padding: 18px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); display: flex; flex-direction: column; gap: 4px; }
+.stat .n { font-family: var(--f-display); font-size: 2rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.stat .l { color: var(--muted); font-size: 0.9rem; }
+.links { display: flex; flex-direction: column; gap: 8px; padding-left: 1.1em; margin: 0; }
+
+/* ---------- present mode: slide jumper ---------- */
+.jumper { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; background: rgba(8, 12, 20, 0.55); padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
+.jumper-panel { width: min(620px, 100%); max-height: min(80vh, 720px); display: flex; flex-direction: column; background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3); overflow: hidden; }
+.jumper-head { display: flex; gap: 10px; align-items: center; padding: 14px 16px; border-bottom: 1px solid var(--line); }
+.jumper-head input { flex: 1; min-width: 0; font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 9px 12px; }
+.jumper-head input:focus { outline: 2px solid var(--accent); outline-offset: 0; }
+.jumper-list { overflow-y: auto; padding: 8px 8px 12px; }
+.jumper-list h4 { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 12px 10px 4px; font-weight: 600; }
+.jumper-list button { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 8px; align-items: baseline; width: 100%; text-align: left; border: 0; background: none; padding: 8px 10px; border-radius: 8px; font-size: 0.95rem; }
+.jumper-list button:hover, .jumper-list button.hl { background: var(--surface-2); }
+.jumper-list button[aria-current="true"] { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+.jumper-list .num { font-family: var(--f-mono); font-size: 0.8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.jumper-foot { padding: 10px 16px; border-top: 1px solid var(--line); font-size: 0.8rem; color: var(--muted); }
+.event-chip { cursor: pointer; border: 0; background: none; font: inherit; text-align: left; padding: 6px 4px; border-radius: 6px; }
+.event-chip:hover { background: var(--surface-2); }
+
+/* ---------- sources, notes, modules ---------- */
+.src { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+.src a { color: var(--muted); }
+.src a:hover { color: var(--accent); }
+.badge.unv { background: var(--tier360-soft); color: var(--tier360); }
+.badge.ok { background: var(--ok-soft); color: var(--ok); }
+.callout { display: flex; flex-direction: column; gap: 6px; padding: 14px 18px; border-radius: var(--radius); border: 1px solid var(--line); background: var(--surface); }
+.callout.warn { border-color: var(--tier360); background: var(--tier360-soft); }
+.callout strong { font-weight: 600; }
+.pit-body.stack { grid-template-columns: 1fr; }
+.pit-body ul { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 4px; }
+.cols-2 { display: grid; grid-template-columns: 1fr; gap: 14px; }
+@media (min-width: 820px) { .cols-2 { grid-template-columns: 1fr 1fr; } }
+.choices { display: flex; flex-direction: column; gap: 8px; border: 0; margin: 0; padding: 0; }
+.choices legend { font-weight: 600; margin-bottom: 6px; padding: 0; }
+.choice { display: grid; grid-template-columns: 22px 1fr; gap: 10px; align-items: start; padding: 12px 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); cursor: pointer; }
+.choice:hover { border-color: var(--accent); }
+.choice input { margin: 3px 0 0; width: 18px; height: 18px; accent-color: var(--accent); }
+.feedback { padding: 14px 18px; border-radius: var(--radius); background: var(--accent-soft); }
+.arch { display: grid; grid-template-columns: 1fr; gap: 14px; }
+@media (min-width: 900px) { .arch { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.arch .panel h3 { margin-bottom: 2px; }
+.arch .panel > .badge { align-self: flex-start; }
+.arch .panel ul { margin: 0; padding-left: 1.1em; display: flex; flex-direction: column; gap: 4px; font-size: 0.92rem; }
+.doc-groups { display: grid; grid-template-columns: 1fr; gap: 14px; }
+@media (min-width: 820px) { .doc-groups { grid-template-columns: 1fr 1fr; } }
+.doc-groups ul { margin: 0; padding-left: 1.1em; display: flex; flex-direction: column; gap: 6px; font-size: 0.92rem; }
+
+/* ---------- team progress ---------- */
+.sync { display: inline-flex; align-items: center; gap: 8px; font-size: 0.84rem; color: var(--muted); }
+.sync::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--muted); flex: none; }
+.sync.shared::before { background: var(--ok); }
+.team { display: flex; flex-direction: column; gap: 8px; }
+.team-empty { padding: 18px; border: 1px dashed var(--line); border-radius: var(--radius); color: var(--muted); }
+details.member { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+details.member summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 32px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 12px 16px; }
+details.member summary::-webkit-details-marker { display: none; }
+.member img { width: 32px; height: 32px; border-radius: 50%; display: block; }
+.member .who { display: flex; flex-direction: column; min-width: 0; }
+.member .who strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.member .who span { font-size: 0.8rem; color: var(--muted); }
+.member .nums { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; font-size: 0.82rem; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.member .mtrack { width: 120px; height: 6px; border-radius: 3px; background: var(--surface-2); overflow: hidden; }
+.member .mtrack div { height: 100%; background: var(--ok); }
+.member-body { padding: 0 16px 16px; display: flex; flex-direction: column; gap: 10px; }
+.member-body .ans { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 10px; font-size: 0.9rem; }
+.member-body .ans span:first-child { font-family: var(--f-mono); font-size: 0.78rem; color: var(--muted); padding-top: 2px; }
+.member-body .ans span:last-child { white-space: pre-wrap; overflow-wrap: anywhere; }
+
+/* ---------- mobile ---------- */
+.toc-btn { display: none; }
+@media (max-width: 1179px) {
+  .toc-btn { display: inline-grid; flex: none; }
+  body.toc-open { overflow: hidden; }
+  body.toc-open .toc {
+    display: block; position: fixed; z-index: 8;
+    top: calc(env(safe-area-inset-top, 0px) + var(--topbar-h)); left: 0; right: 0; bottom: 0;
+    max-height: none; background: var(--surface); border-right: 0;
+    padding: 20px max(16px, env(safe-area-inset-right, 0px)) calc(24px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  }
+  body.toc-open .toc a { padding: 11px 10px; font-size: 1rem; }
+}
+@media (hover: none) { .keys, .presentbar .hint { display: none; } }
+@media (max-width: 640px) {
+  .slide { padding-block: 40px; }
+  .slide-inner { gap: 20px; }
+  .lead { font-size: 1.02rem; }
+  .brand span { display: none; }
+  .topbar { gap: 8px; }
+  .topbar .btn.primary { padding: 7px 12px; }
+  textarea { font-size: 16px; }
+  /* tier table becomes stacked cards so the 360 column is visible without side-scrolling */
+  .table-wrap { overflow: visible; border: 0; background: none; }
+  .table-wrap table { min-width: 0; }
+  .table-wrap thead { display: none; }
+  .table-wrap tbody, .table-wrap tr, .table-wrap th, .table-wrap td { display: block; width: auto; }
+  .table-wrap tr { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); margin-bottom: 10px; overflow: hidden; }
+  .table-wrap tbody th { background: var(--surface-2); padding: 10px 14px; border-bottom: 1px solid var(--line); }
+  .table-wrap td { padding: 10px 14px; border-bottom: 1px solid var(--line); }
+  .table-wrap tr td:last-child { border-bottom: 0; }
+  .table-wrap td::before { content: attr(data-label); display: block; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--accent); margin-bottom: 2px; }
+  .table-wrap td.p360::before { color: var(--tier360); }
+  .task-link { grid-template-columns: 1fr auto; gap: 4px 12px; padding: 12px 16px; }
+  .task-link .num { grid-column: 1 / -1; }
+  details.member summary { grid-template-columns: 32px minmax(0, 1fr); }
+  .member .nums { grid-column: 2; align-items: flex-start; }
+  .member .mtrack { width: 100%; max-width: 200px; }
+  .member-body .ans { grid-template-columns: 1fr; gap: 2px; }
+  .progress-row .btn { margin-left: auto; }
+  body.present .slide { padding-block: 24px; }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <button class="icon-btn toc-btn" type="button" id="toc-btn" aria-label="Sections" aria-expanded="false" aria-controls="toc"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2.5 4h11M2.5 8h11M2.5 12h11"/></svg></button>
+  <div class="brand">GTM Team Onboarding <span>· Reference &amp; Workbook</span></div>
+  <div class="spacer"></div>
+  <div class="mini-progress" title="30-day checklist progress"><span id="mini-count">0 / 14</span><div class="track"><div class="fill" id="mini-fill"></div></div></div>
+  <button class="icon-btn theme-btn" type="button" data-theme-toggle aria-label="Switch between light and dark mode"><svg class="moon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M13.5 9.5A5.5 5.5 0 0 1 6.5 2.5a5.5 5.5 0 1 0 7 7z"/></svg><svg class="sun" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="8" cy="8" r="3"/><path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3 3l1 1M12 12l1 1M3 13l1-1M12 4l1-1"/></svg></button>
+  <button class="btn primary" id="present-btn" type="button" aria-label="Present as slides (P)">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="1.5" y="2.5" width="13" height="9" rx="1.5"/><path d="M8 11.5V14M5 14h6" stroke-linecap="round"/></svg>
+    Present
+  </button>
+</header>
+
+<div class="layout">
+  <nav class="toc" id="toc" aria-label="Sections"></nav>
+
+  <main id="deck">
+
+    <!-- WELCOME -->
+    <section class="slide welcome" id="welcome" data-title="Welcome" data-group="Start">
+      <div class="slide-inner">
+        <div class="title-block">
+          <div class="stream-line"><span class="ev">account</span><span class="ev">container</span><span class="ev">workspace</span><span class="ev">version</span><span class="ev">publish</span></div>
+          <h1>Google Tag Manager team onboarding</h1>
+          <p class="lead">Everything you need for your first 30 days with Google Tag Manager (GTM), the tool that decides which measurement and marketing tags run on a website or app, and when. Part I explains the platform: what it does, how accounts and containers are structured, the tools around it, how tags, data and consent behave, and what changed in 2025 and 2026. Part II is the workbook: the core vocabulary, the problems everyone runs into, a 30-day checklist and a scenario-based lab. Part III prepares Customer Success and Sales Operations teams to support clients with Tag Manager, server-side tagging and the Google tag gateway.</p>
+        </div>
+        <div class="how">
+          <button class="btn primary" type="button" data-action="present">Start presenting</button>
+          <span>Or scroll to read it as a page.</span>
+          <span class="keys"><kbd>P</kbd> present · <kbd>G</kbd> jump to slide · <kbd>T</kbd> light/dark · <kbd>←</kbd> <kbd>→</kbd> move · <kbd>Esc</kbd> exit</span>
+        </div>
+        <div class="acts">
+          <a class="act" href="#landscape"><span class="eyebrow">Part I</span><h3>The platform</h3><p>What Tag Manager does, how containers are built, the tools around it and how the data works.</p></a>
+          <a class="act" href="#glossary"><span class="eyebrow">Part II</span><h3>Learn the language</h3><p>Ten terms and five common problems.</p></a>
+          <a class="act" href="#checklist"><span class="eyebrow">Part II</span><h3>Do the work</h3><p>The 30-day checklist and five scenario tasks for a fictional client.</p></a>
+          <a class="act" href="#need-sst"><span class="eyebrow">Part III</span><h3>Supporting Tag Manager clients</h3><p>Server-side and the tag gateway, spotting common issues, architecture and costs.</p></a>
+          <a class="act" href="#finish"><span class="eyebrow">Wrap-up</span><h3>Your progress</h3><p>See how far you've got and where to go next.</p></a>
+        </div>
+        <p class="note">Your checklist ticks and lab answers are saved in this browser on this device. They stay unless you use a private window or clear your browsing data.</p>
+      </div>
+    </section>
+
+    <!-- LANDSCAPE -->
+    <section class="slide" id="landscape" data-title="What Tag Manager does" data-group="Part I · Platform">
+      <div class="slide-inner">
+        <div class="slide-head">
+          <span class="eyebrow">Part I · The platform</span>
+          <h2>What Tag Manager does, and how it differs from the Google tag</h2>
+          <p class="lead">A tag is a piece of code that sends data to a system such as Google Analytics or Google Ads. Tag Manager is a tag management system: you install its snippets on the site once, then add and change tags in the Tag Manager interface instead of editing the site's code.</p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Option</th><th class="std">What it is</th><th class="p360">When it fits</th></tr></thead>
+            <tbody>
+              <tr><th><a href="https://support.google.com/tagmanager/answer/7582054" target="_blank" rel="noopener">Google tag (gtag.js)</a></th><td class="std">One tag, installed with one snippet per page, that sends data only to Google products (Google Analytics, Google Ads and other "destinations").</td><td class="p360">A simple site that only needs Google measurement and has a developer to edit the code.</td></tr>
+              <tr><th><a href="https://support.google.com/tagmanager/answer/6102821" target="_blank" rel="noopener">Tag Manager web container</a></th><td class="std">Two snippets per page. Tags, triggers and variables are managed in the interface, with versions, preview and user permissions. Runs Google, third-party and custom tags.</td><td class="p360">Most clients: several tools, a marketing team that changes tags often, or a need for testing and approvals before anything goes live.</td></tr>
+              <tr><th><a href="https://support.google.com/tagmanager/answer/13387731" target="_blank" rel="noopener">Server container (server-side tagging)</a></th><td class="std">A second container running on the client's own cloud server. The web container sends one request per event to it, and the server forwards data to each vendor.</td><td class="p360">Clients who need to control what data leaves their site, reduce browser requests, or set first-party cookies from their own server.</td></tr>
+              <tr><th><a href="https://support.google.com/google-ads/answer/16214371" target="_blank" rel="noopener">Google tag gateway for advertisers</a></th><td class="std">Serves the Google tag and its measurement requests from the client's own domain, through their CDN, load balancer or server container.</td><td class="p360">Clients who want Google measurement to run first-party with little engineering, especially on Cloudflare, Akamai, Fastly, CloudFront or Google Cloud.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout"><strong>The Google tag and Tag Manager are merging</strong><p>Google has upgraded every Google tag with Tag Manager features. In November 2026 it announced that each Google tag becomes a full Tag Manager container, with one tag per Google destination. Installations that aren't yet supported get the upgrade in January 2027. Expect clients to ask what this changes for them.</p></div>
+        <p class="src">Source: <a href="https://support.google.com/tagmanager/answer/6102821" target="_blank" rel="noopener">Introduction to Tag Manager</a> · <a href="https://support.google.com/tagmanager/answer/7582054" target="_blank" rel="noopener">Google Tag Manager vs. gtag.js</a> · <a href="https://support.google.com/tagmanager/answer/13387731" target="_blank" rel="noopener">Client-side vs. server-side tagging</a> · <a href="https://support.google.com/google-ads/answer/16214371" target="_blank" rel="noopener">Google tag gateway announcement</a> · <a href="https://support.google.com/tagmanager/answer/4620708" target="_blank" rel="noopener">Release notes</a></p>
+        <p class="note">Features change often. Check the linked Help Center pages before quoting a limit. Checked against Google's documentation on 23 November 2026.</p>
+      </div>
+    </section>
+
+    <!-- STRUCTURE -->
+    <section class="slide" id="structure" data-title="Account structure" data-group="Part I · Platform">
+      <div class="slide-inner">
+        <div class="slide-head">
+          <span class="eyebrow">Part I · The platform</span>
+          <h2>Account, container, workspace, version, environment</h2>
+          <p class="lead">Every Tag Manager question starts with "which container, and which version is live?" Changes are drafts until someone with the right permission publishes them.</p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Level</th><th class="std">What it represents</th><th class="p360">What's set here</th></tr></thead>
+            <tbody>
+              <tr><th><a href="https://support.google.com/tagmanager/answer/6103576" target="_blank" rel="noopener">Account</a></th><td class="std">Usually one per organization. Should be owned by the client, not by an agency.</td><td class="p360">Account permissions: <strong>Admin</strong> (creates containers, manages users) or <strong>User</strong>. Google recommends at least two admins from the client's own team.</td></tr>
+              <tr><th><a href="https://support.google.com/tagmanager/answer/6103576" target="_blank" rel="noopener">Container</a></th><td class="std">The set of tags, triggers and variables installed on one website, app or server. Best practice is one per web domain, or one for a single experience that spans domains.</td><td class="p360">Container permissions: <strong>No access</strong>, <strong>Read</strong>, <strong>Edit</strong>, <strong>Approve</strong> (can create versions) and <strong>Publish</strong>. Also container settings and, after optimization, shared Google destination settings.</td></tr>
+              <tr><th>Workspace</th><td class="std">A draft area where someone edits the container. Several people can work in separate workspaces at once.</td><td class="p360">The changes waiting to be published. Each change can be reviewed or abandoned before publishing.</td></tr>
+              <tr><th><a href="https://support.google.com/tagmanager/answer/6107163" target="_blank" rel="noopener">Version</a></th><td class="std">A saved snapshot of the whole container. Every publish creates one.</td><td class="p360">Name and description, who published it and when. Any older version can be published again to roll back.</td></tr>
+              <tr><th><a href="https://support.google.com/tagmanager/answer/6311518" target="_blank" rel="noopener">Environment</a></th><td class="std"><strong>Live</strong> always serves the published version. Custom environments serve a chosen version on staging or test servers.</td><td class="p360">Which version each environment serves. Custom environments have their own snippet; resetting the link breaks the old snippet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout warn"><strong>Don't lose the last admin</strong><p>If an account or container ends up with no admin, Google deletes it automatically. Users with Read access then have 30 days to export it from the trash. Tag Diagnostics warns when an account has only one admin.</p></div>
+        <div class="callout"><strong>The container ID tells you what it can run</strong><p>Since July 2026 the container ID decides its capabilities: a <code>GTM-</code> container can run any tag, while a Google tag ID (<code>G-</code>, <code>AW-</code>) is limited to tags Google provides.</p></div>
+        <p class="src">Source: <a href="https://support.google.com/tagmanager/answer/6103576" target="_blank" rel="noopener">Considerations before you install</a> · <a href="https://support.google.com/tagmanager/answer/6107011" target="_blank" rel="noopener">User permissions</a> · <a href="https://support.google.com/tagmanager/answer/6107163" target="_blank" rel="noopener">Publishing, versions and approvals</a> · <a href="https://support.google.com/tagmanager/answer/6311518" target="_blank" rel="noopener">Environments</a> · <a href="https://support.google.com/tagmanager/answer/4620708" target="_blank" rel="noopener">Release notes (9 July 2026)</a></p>
+      </div>
+    </section>
+
+    <!-- ECOSYSTEM -->
+    <section class="slide" id="ecosystem" data-title="The tools around Tag Manager" data-group="Part I · Platform">
+      <div class="slide-inner">
+        <div class="slide-head">
+          <span class="eyebrow">Part I · The platform</span>
+          <h2>Where Tag Manager ends and other tools begin</h2>
+          <p class="lead">Tag Manager sits between the website and the tools that receive its data. Knowing which piece owns which job saves time when something looks wrong. Select a piece to see when it matters.</p>
+        </div>
+        <div class="eco" role="group" aria-label="Tag Manager stack">
+          <div class="outs">
+            <button class="node" type="button" data-k="site" aria-pressed="false"><span class="nm">Website &amp; data layer</span><span class="rl">Pages, events, business data</span></button>
+            <button class="node" type="button" data-k="consent" aria-pressed="false"><span class="nm">Consent banner (CMP)</span><span class="rl">Visitor choices, consent mode</span></button>
+          </div>
+          <div class="arrow" aria-hidden="true"><svg viewBox="0 0 34 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 7h30M25 1l6 6-6 6"/></svg><small>events</small></div>
+          <button class="node core" type="button" data-k="gtm" aria-pressed="true"><span class="nm">Google Tag Manager</span><span class="rl">Decides which tags fire, and when</span></button>
+          <div class="arrow" aria-hidden="true"><svg viewBox="0 0 34 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 7h30M25 1l6 6-6 6"/></svg><small>hits</small></div>
+          <div class="outs">
+            <button class="node" type="button" data-k="google" aria-pressed="false"><span class="nm">Google destinations</span><span class="rl">GA4, Google Ads, Floodlight</span></button>
+            <button class="node" type="button" data-k="server" aria-pressed="false"><span class="nm">Server container &amp; tag gateway</span><span class="rl">First-party processing and serving</span></button>
+          </div>
+        </div>
+        <div class="eco-detail" id="eco-detail" aria-live="polite">
+          <h3 id="eco-name">Google Tag Manager</h3>
+          <div class="kv"><span class="k">Role in the stack</span><p id="eco-role">Holds the tags, triggers and variables for a site, decides when each tag fires based on events and consent, and keeps every published change as a version you can preview, compare and roll back.</p></div>
+          <div class="kv"><span class="k">Use it when</span><p id="eco-when">Adding or changing a tag, checking why a tag did or didn't fire, controlling who can publish, or testing a change in Preview before it goes live.</p></div>
+          <p><a id="eco-link" href="https://support.google.com/tagmanager/answer/6102821" target="_blank" rel="noopener">Learn more about Google Tag Manager</a></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- DATA BASICS -->
+    <section class="slide" id="data-basics" data-title="How the data works" data-group="Part I · Platform">
+      <div class="slide-inner">
+        <div class="slide-head">
+          <span class="eyebrow">Part I · The platform</span>
+          <h2>How the data works: triggers, the data layer, consent, destinations and publishing</h2>
+          <p class="lead">Clients ask about these six topics more than any others. Open one to read it.</p>
+        </div>
+        <div class="pitfalls">
+          <details class="pit" open>
+            <summary><span class="sym">Tags, triggers, variables and firing order</span><svg class="chev" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3l5 5-5 5"/></svg></summary>
+            <div class="pit-body">
+              <div class="kv"><span class="k">The three parts</span><p>A <strong>tag</strong> sends data. A <strong>trigger</strong> listens for an event (a page load, click, form submit, custom event) and fires the tags attached to it. A <strong>variable</strong> is a placeholder for a value, such as the page URL or an order total, used in triggers and tags.</p></div>
+              <div class="kv"><span class="k">Page-load order</span><ul><li><strong>Consent Initialization</strong>: first, for the consent banner and consent defaults.</li><li><strong>Initialization</strong>: before everything else, for tags such as the Google tag.</li><li><strong>Page View</strong>, then <strong>DOM Ready</strong> (page structure ready), then <strong>Window Loaded</strong> (images and scripts finished).</li></ul></div>
+              <div class="kv"><span class="k">Other triggers</span><p>Click, Element Visibility, Form Submission, Scroll Depth, YouTube Video, Custom Event, History Change, JavaScript Error, Timer and Trigger Group. Use "Some events" with conditions rather than firing on everything.</p></div>
+            </div>
+            <p class="src">Source: <a href="https://support.google.com/tagmanager/answer/6103657" target="_blank" rel="noopener">Components of Tag Manager</a> · <a href="https://support.google.com/tagmanager/answer/7679319" target="_blank" rel="noopener">Page view triggers</a> · <a href="https://support.google.com/tagmanager/topic/7679384" target="_blank" rel="noopener">Triggers</a> · <a href="https://support.google.com/tagmanager/answer/7182738" target="_blank" rel="noopener">Built-in variables</a></p>
+          </details>
+          <details class="pit">
+            <summary><span class="sym">The data layer</span><svg class="chev" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3l5 5-5 5"/></svg></summary>
+            <div class="pit-body">
+              <div class="kv"><span class="k">What it is</span><p>A JavaScript list on the page (<code>window.dataLayer</code>) where the site's developer puts events and values, such as a purchase and its total. Tag Manager reads it in order, one message at a time.</p></div>
+              <div class="kv"><span class="k">Rules that prevent bugs</span><ul><li>Create it before the container snippet, with <code>window.dataLayer = window.dataLayer || [];</code>, and never replace it after Tag Manager loads.</li><li>Values only last for the current page. Push them again on every page that needs them.</li><li>Pushes are queued. If the next tag needs a value, push it with an <code>event</code> name and fire the tag on a Custom Event trigger.</li><li>The name is case-sensitive: <code>dataLayer</code>, not <code>datalayer</code>.</li></ul></div>
+              <div class="kv"><span class="k">Why it matters</span><p>Business values such as order totals are far more reliable from the data layer than read from the page's text or layout, which breaks when the site is redesigned.</p></div>
+            </div>
+            <p class="src">Source: <a href="https://developers.google.com/tag-platform/devguides/datalayer" target="_blank" rel="noopener">The data layer</a> · <a href="https://support.google.com/tagmanager/answer/6103657" target="_blank" rel="noopener">Components of Tag Manager</a></p>
+          </details>
+          <details class="pit">
+            <summary><span class="sym">Consent mode</span><svg class="chev" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3l5 5-5 5"/></svg></summary>
+            <div class="pit-body">
+              <div class="kv"><span class="k">What it does</span><p>Tells Google tags whether the visitor agreed to cookies and ads use of their data. Four main consent types: <code>ad_storage</code>, <code>analytics_storage</code>, <code>ad_user_data</code> and <code>ad_personalization</code> (the last two were added in consent mode v2, November 2023).</p></div>
+              <div class="kv"><span class="k">Basic vs advanced</span><ul><li><strong>Basic</strong>: Google tags don't load until the visitor accepts. Nothing is sent before that.</li><li><strong>Advanced</strong>: tags load with "denied" defaults and send cookieless pings, which let Google model the conversions it can't observe.</li></ul></div>
+              <div class="kv"><span class="k">Order matters</span><p>Set the consent default before any Google tag runs (on the Consent Initialization trigger), then send an update when the visitor chooses. Defaults can differ by region. In Tag Manager, use a consent template or an integrated consent banner, not a Custom HTML tag.</p></div>
+            </div>
+            <p class="src">Source: <a href="https://developers.google.com/tag-platform/security/concepts/consent-mode" target="_blank" rel="noopener">Consent mode overview</a> · <a href="https://developers.google.com/tag-platform/security/guides/consent" target="_blank" rel="noopener">Set up consent mode</a> · <a href="https://support.google.com/tagmanager/answer/10718549" target="_blank" rel="noopener">Tag Manager consent mode support</a></p>
+          </details>
+          <details class="pit">
+            <summary><span class="sym">The Google tag, destinations and container optimization</span><svg class="chev" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3l5 5-5 5"/></svg></summary>
+            <div class="pit-body">
+              <div class="kv"><span class="k">Destinations</span><p>Google Analytics, Google Ads and Floodlight are "destinations" of the Google tag. Settings such as cross-domain linking, internal traffic, session timeout and consent overrides are set once in the Google tag settings and apply to every destination on it.</p></div>
+              <div class="kv"><span class="k">Optimizing a container</span><p>Since October 2026 Google recommends optimizing Tag Manager containers: the container sends data straight to Google destinations without loading gtag.js, shared settings move to a new Settings tab, and each destination gets its own tag. It isn't automatic: someone with Edit access or higher starts it from a banner, the changes land in a workspace, and you preview before publishing.</p></div>
+              <div class="kv"><span class="k">Watch out</span><p>Existing event tags and triggers are kept, but shared settings now apply across destinations, so preview carefully. Access granted during optimization isn't part of the container version.</p></div>
+            </div>
+            <p class="src">Source: <a href="https://support.google.com/tagmanager/answer/12131703" target="_blank" rel="noopener">Configure your Google tag settings</a> · <a href="https://support.google.com/tagmanager/answer/16659369" target="_blank" rel="noopener">Optimize your Tag Manager container</a> · <a href="https://support.google.com/tagmanager/answer/17079602" target="_blank" rel="noopener">Updates to the Google tag and Tag Manager (August 2026)</a></p>
+          </details>
+          <details class="pit">
+            <summary><span class="sym">Preview, versions and publishing</span><svg class="chev" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3l5 5-5 5"/></svg></summary>
+            <div class="pit-body">
+              <div class="kv"><span class="k">Preview</span><p>Click <strong>Preview</strong> in the workspace to open Tag Assistant, enter the site URL and connect. You browse the site as if the draft were live, and see which tags fired, in what order, with the data layer and variable values for each event. Only you (or people you share the preview with) see it.</p></div>
+              <div class="kv"><span class="k">Publishing</span><p><strong>Submit</strong> → <strong>Publish and Create Version</strong>, with a clear version name and description. Publishing needs Publish permission. Approval workflows are a Tag Manager 360 feature.</p></div>
+              <div class="kv"><span class="k">Rolling back</span><p>From <strong>Versions</strong>, publish an earlier version. "Set as Latest Version" only resets the draft; it doesn't change the live site until you publish.</p></div>
+            </div>
+            <p class="src">Source: <a href="https://support.google.com/tagmanager/answer/6107056" target="_blank" rel="noopener">Preview and debug containers</a> · <a href="https://support.google.com/tagmanager/answer/6107163" target="_blank" rel="noopener">Publishing, versions and approvals</a></p>
+          </details>
+          <details class="pit">
+            <summary><span class="sym">Server-side tagging and the Google tag gateway</span><svg class="chev" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3l5 5-5 5"/></svg></summary>
+            <div class="pit-body">
+              <div class="kv"><span class="k">Server-side tagging</span><p>A server container runs on the client's own cloud project (Google recommends Cloud Run). <strong>Clients</strong> inside it receive requests and turn them into events; tags then send data to each vendor. Data can be checked, cleaned or removed before it leaves, and cookies can be set from the client's own subdomain or path.</p></div>
+              <div class="kv"><span class="k">Google tag gateway</span><p>Serves the Google tag from a path on the client's domain (for example <code>/metrics</code>) through their CDN, load balancer or server container, which forwards measurement to Google. It's set up from the Google tag or Tag Manager admin screen and checked in Tag Assistant.</p></div>
+              <div class="kv"><span class="k">They work together</span><p>If the client already runs server-side tagging, Google says to turn on the gateway in the server container. Otherwise the CDN or load balancer route is usually simpler.</p></div>
+            </div>
+            <p class="src">Source: <a href="https://developers.google.com/tag-platform/tag-manager/server-side/intro" target="_blank" rel="noopener">Introduction to server-side tagging</a> · <a href="https://support.google.com/tagmanager/answer/16968707" target="_blank" rel="noopener">Google tag gateway implementation flow</a> · <a href="https://support.google.com/tagmanager/answer/16222402" target="_blank" rel="noopener">Set up the gateway with your CDN</a></p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHANGES -->
+    <section class="slide" id="changes" data-title="What changed in 2025–2026" data-group="Part I · Platform">
+      <div class="slide-inner">
+        <div class="slide-head">
+          <span class="eyebrow">Part I · The platform</span>
+          <h2>What changed in 2025 and 2026</h2>
+          <p class="lead">Tag Manager changed more in these two years than in the decade before. Older tutorials and some Help Center pages still describe the previous setup.</p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>When</th><th class="std">What changed</th><th class="p360">What it means for clients</th></tr></thead>
+            <tbody>
+              <tr><th>Apr 2025</th><td class="std">Containers with Google Ads or Floodlight tags load a Google tag first, automatically.</td><td class="p360">Google recommends adding a Google tag on the Initialization – All Pages trigger yourself.</td></tr>
+              <tr><th>May 2025</th><td class="std">"First-party mode" renamed <strong>Google tag gateway for advertisers</strong>. Cloudflare, then Akamai, Fastly, Google Cloud load balancers and CloudFront added through 2026.</td><td class="p360">First-party serving of Google tags without building a server container.</td></tr>
+              <tr><th>Jul 2026</th><td class="std">The container ID decides what a container can run: <code>GTM-</code> unrestricted, <code>G-</code>/<code>AW-</code> limited to Google's own tags.</td><td class="p360">A container with a Google tag ID is limited to tags Google provides. Use a <code>GTM-</code> container for third-party tags.</td></tr>
+              <tr><th>Aug–Oct 2026</th><td class="std">Simplified interface (Settings tab, data flow map, Advanced menu), visual tagging beta for Google Ads purchase conversions, and <strong>container optimization</strong> with one tag per Google destination.</td><td class="p360">Screens look different from older training. Optimization is recommended but needs testing before publishing.</td></tr>
+              <tr><th>Oct 2026</th><td class="std"><code>gtag('config')</code> commands on the page now appear as <code>gtag.config</code> events in the data layer.</td><td class="p360">They can fire wildcard Custom Event triggers by surprise. Containers migrated from gtag.js have a legacy setting to manage this.</td></tr>
+              <tr><th>Nov 2026</th><td class="std">The Google tag and Tag Manager are unified: every Google tag becomes a Tag Manager container, and Tag Manager permissions apply everywhere, including Tag Assistant data.</td><td class="p360">Unsupported installations are upgraded in January 2027. Check who has access before then.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="src">Source: <a href="https://support.google.com/tagmanager/answer/4620708" target="_blank" rel="noopener">Tag Manager release notes</a> · <a href="https://support.google.com/tagmanager/answer/17079602" target="_blank" rel="noopener">Updates to the Google tag and Tag Manager</a> · <a href="https://support.google.com/tagmanager/answer/16659369" target="_blank" rel="noopener">Optimize your container</a> · <a href="https://support.google.com/tagmanager/answer/18411054" target="_blank" rel="noopener">Legacy gtag('config') behavior</a></p>
+      </div>
+    </section>
+
+    <!-- GLOSSARY -->
+    <section class="slide" id="glossary" data-title="Glossary" data-group="Part II · Workbook">
+      <div class="slide-inner">
+        <div class="slide-head">
+          <span class="eyebrow">Part II · Learn the language</span>
+          <h2>Ten terms you'll hear every day</h2>
+        </div>
+        <div class="toolbar">
+          <button class="btn" type="button" id="quiz-btn" aria-pressed="false">Quiz me</button>
+          <span class="note" id="quiz-note">Hides the definitions. Select a card to check yourself.</span>
+        </div>
+        <div class="terms" id="terms">
+          <button class="term" type="button"><span class="t">Container</span><span class="d">The set of tags, triggers and variables installed on one website, app or server, identified by an ID such as GTM-XXXXXX.</span><span class="tap">Show definition</span></button>
+          <button class="term" type="button"><span class="t">Tag</span><span class="d">Code that sends data to a system such as Google Analytics, Google Ads or a third-party tool.</span><span class="tap">Show definition</span></button>
+          <button class="term" type="button"><span class="t">Trigger</span><span class="d">A rule that listens for an event, such as a page view, click or custom event, and fires the tags attached to it when its conditions match.</span><span class="tap">Show definition</span></button>
+          <button class="term" type="button"><span class="t">Variable</span><span class="d">A named placeholder for a value that changes, such as the page path or an order total. Tag Manager has built-in variables, and you can define your own.</span><span class="tap">Show definition</span></button>
+          <button class="term" type="button"><span class="t">Data layer</span><span class="d">A JavaScript list on the page where the site puts events and values for tags to use. It only lasts for the current page.</span><span class="tap">Show definition</span></button>
+          <button class="term" type="button"><span class="t">Workspace</span><span class="d">A draft area for editing a container. Changes in it don't affect the live site until they're published.</span><span class="tap">Show definition</span></button>
+          <button class="term" type="button"><span class="t">Version</span><span class="d">A saved snapshot of a container. Every publish creates one, and any earlier version can be published again to roll back.</span><span class="tap">Show definition</span></button>
+          <button class="term" type="button"><span class="t">Google tag</span><span class="d">Google's single tag for its own products. Its "destinations" are Google Analytics, Google Ads and Floodlight, which share its settings.</span><span class="tap">Show definition</span></button>
+          <button class="term" type="button"><span class="t">Consent mode</span><span class="d">How the site tells Google tags what the visitor agreed to, through consent types such as ad_storage and analytics_storage, so tags adjust what they collect.</span><span class="tap">Show definition</span></button>
+          <button class="term" type="button"><span class="t">Server container</span><span class="d">A container that runs on the client's own cloud server. Its clients receive incoming requests and turn them into events for its tags.</span><span class="tap">Show definition</span></button>
+        </div>
+        <p class="note">Go deeper in the Help Center: <a href="https://support.google.com/tagmanager/answer/6103657" target="_blank" rel="noopener">components</a>, <a href="https://support.google.com/tagmanager/topic/7679384" target="_blank" rel="noopener">triggers</a>, <a href="https://support.google.com/tagmanager/answer/7683362" target="_blank" rel="noopener">user-defined variables</a>, <a href="https://developers.google.com/tag-platform/devguides/datalayer" target="_blank" rel="noopener">the data layer</a>, <a href="https://support.google.com/tagmanager/answer/6107163" target="_blank" rel="noopener">versions</a>, <a href="https://support.google.com/tagmanager/answer/12131703" target="_blank" rel="noopener">the Google tag</a>, <a href="https://support.google.com/tagmanager/answer/10718549" target="_blank" rel="noopener">consent mode</a>, <a href="https://developers.google.com/tag-platform/tag-manager/server-side/intro" target="_blank" rel="noopener">server-side tagging</a>.</p>
+      </div>
+    </section>
+
+    <!-- PITFALLS -->
+    <section class="slide" id="pitfalls" data-title="Common problems" data-group="Part II · Workbook">
+      <div class="slide-inner">
+        <div class="slide-head">
+          <span class="eyebrow">Part II · Learn the language</span>
+          <h2>Five things that will confuse you, and what to do</h2>
+        </div>
+        <div class="pitfalls">
+          <details class="pit" open>
+            <summary><span class="sym">"My tag didn't fire"</span><svg class="chev" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3l5 5-5 5"/></svg></summary>
+            <div class="pit-body">
+              <div class="kv"><span class="k">Why it happens</span><p>The trigger's conditions didn't match; an exception trigger blocked it; a consent check required consent the visitor hadn't given; the tag is paused; or the change is still in a workspace and was never published.</p></div>
+              <div class="kv"><span class="k">What to do</span><p>Open Preview, select the event where the tag should have fired, and look at <strong>Tags Not Fired</strong>: the tag's details show which trigger condition failed. Then check its consent settings. See <a href="https://support.google.com/tagmanager/answer/6107056" target="_blank" rel="noopener">Preview and debug containers</a> and <a href="https://support.google.com/tagmanager/answer/10718549" target="_blank" rel="noopener">consent mode support</a>.</p></div>
+            </div>
+          </details>
+          <details class="pit">
+            <summary><span class="sym">A variable shows "undefined" or the previous page's value</span><svg class="chev" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3l5 5-5 5"/></svg></summary>
+            <div class="pit-body">
+              <div class="kv"><span class="k">Why it happens</span><p>The value was pushed to the data layer after the tag fired, pushes are queued behind other messages, the data layer was replaced after Tag Manager loaded, or the key name doesn't match exactly (names are case-sensitive).</p></div>
+              <div class="kv"><span class="k">What to do</span><p>In Preview, open the event's <strong>Data Layer</strong> tab to see what was really there. Ask the developer to push the value with an <code>event</code> name, and fire the tag on that Custom Event trigger. See <a href="https://developers.google.com/tag-platform/devguides/datalayer" target="_blank" rel="noopener">The data layer</a>.</p></div>
+            </div>
+          </details>
+          <details class="pit">
+            <summary><span class="sym">Conversions dropped after a consent banner went live</span><svg class="chev" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3l5 5-5 5"/></svg></summary>
+            <div class="pit-body">
+              <div class="kv"><span class="k">Why it happens</span><p>Some drop is expected when visitors decline. A big drop often means Google tags are fully blocked (by exception triggers, extra consent checks, or the banner's own auto-blocking), so they can't send the cookieless pings used for conversion modeling. Or the consent default runs after the tags.</p></div>
+              <div class="kv"><span class="k">What to do</span><p>Check in Tag Assistant whether Google tags are firing with denied consent. If the client chose advanced consent mode, remove consent-based exception triggers from Google tags and set their additional consent checks to "Not set". See <a href="https://support.google.com/tagmanager/answer/12962079" target="_blank" rel="noopener">Unblock Google tags with consent mode</a>.</p></div>
+            </div>
+          </details>
+          <details class="pit">
+            <summary><span class="sym">Page views doubled after a migration or optimization</span><svg class="chev" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3l5 5-5 5"/></svg></summary>
+            <div class="pit-body">
+              <div class="kv"><span class="k">Why it happens</span><p>A hard-coded Google tag still runs on the page alongside Tag Manager, or a container migrated from gtag.js had its "Support gtag('config') initialization events" setting changed without moving the page's settings into the tags first.</p></div>
+              <div class="kv"><span class="k">What to do</span><p>In Preview, confirm there's exactly one page_view per page and look for duplicate Google tag snippets in the page source. See <a href="https://support.google.com/tagmanager/answer/18411054" target="_blank" rel="noopener">Manage legacy gtag('config') behavior</a>.</p></div>
+            </div>
+          </details>
+          <details class="pit">
+            <summary><span class="sym">"It works in Preview but not on the live site"</span><svg class="chev" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3l5 5-5 5"/></svg></summary>
+            <div class="pit-body">
+              <div class="kv"><span class="k">Why it happens</span><p>Preview shows the workspace draft. The change was never published, was published to a custom environment instead of Live, or the live site loads a different container ID.</p></div>
+              <div class="kv"><span class="k">What to do</span><p>Check the <strong>Versions</strong> list for what's published, and to which environment. Confirm the container ID in the page source matches. See <a href="https://support.google.com/tagmanager/answer/6107163" target="_blank" rel="noopener">Publishing and versions</a> and <a href="https://support.google.com/tagmanager/answer/6311518" target="_blank" rel="noopener">Environments</a>.</p></div>
+            </div>
+          </details>
+          <details class="pit urgent">
+            <summary><span class="badge danger">Escalate now</span><span class="sym">A container is flagged for malware</span><svg class="chev" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3l5 5-5 5"/></svg></summary>
+            <div class="pit-body">
+              <div class="kv"><span class="k">Why it happens</span><p>Tag Manager scans containers automatically. Tags that point to a site where malware was found won't fire, and the container shows a malware alert. Re-enabling a disabled tag can lock users out of the account.</p></div>
+              <div class="kv"><span class="k">What to do</span><p>Tell your Tag Manager lead right away. Don't try to re-enable the tag. The fix is to remove its triggers and republish, which an admin should do. See <a href="https://support.google.com/tagmanager/answer/6328489" target="_blank" rel="noopener">Malware detection</a>.</p></div>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHECKLIST -->
+    <section class="slide" id="checklist" data-title="30-day checklist" data-group="Part II · Workbook">
+      <div class="slide-inner">
+        <div class="slide-head">
+          <span class="eyebrow">Part II · Do the work</span>
+          <h2>Your first 30 days</h2>
+        </div>
+        <div class="progress-row">
+          <strong id="check-count">0 of 14 done</strong>
+          <div class="big-track"><div class="fill" id="check-fill"></div></div>
+          <button class="btn" type="button" id="reset-checks">Clear ticks</button>
+        </div>
+        <span class="sync" data-sync></span>
+        <div class="weeks">
+          <div class="week">
+            <header><h3>Set up and learn the basics</h3><span class="wk">Week 1</span></header>
+            <label class="check"><input type="checkbox" id="c1-1"><span>Confirm you have <a href="https://support.google.com/tagmanager/answer/6107011" target="_blank" rel="noopener">Read</a> access to our clients' containers. Read lets you see tags, triggers and variables, but not change them.</span></label>
+            <label class="check"><input type="checkbox" id="c1-2"><span>Review Part I, and ask your buddy which accounts and containers we work in, who the admins are, and which consent banner each client uses.</span></label>
+            <label class="check"><input type="checkbox" id="c1-3"><span>Read the four-step <a href="https://support.google.com/tagmanager/answer/14842164" target="_blank" rel="noopener">Set up Tag Manager</a> guide in the Help Center.</span></label>
+            <label class="check"><input type="checkbox" id="c1-4"><span>Read <a href="https://support.google.com/tagmanager/answer/6107056" target="_blank" rel="noopener">Preview and debug containers</a> and open <a href="https://tagassistant.google.com/" target="_blank" rel="noopener">Tag Assistant</a> once.</span></label>
+          </div>
+          <div class="week">
+            <header><h3>Read real containers</h3><span class="wk">Week 2</span></header>
+            <label class="check"><input type="checkbox" id="c2-1"><span>In one container, list the tags and note which fire on Consent Initialization, Initialization and All Pages.</span></label>
+            <label class="check"><input type="checkbox" id="c2-2"><span>Open <strong>Versions</strong> and read the last three: what changed, who published, and whether the names explain the change.</span></label>
+            <label class="check"><input type="checkbox" id="c2-3"><span>Shadow your buddy in Preview on a client site and find which tags fire on a page view and on one conversion.</span></label>
+            <label class="check"><input type="checkbox" id="c2-4"><span>Open the <a href="https://support.google.com/tagmanager/answer/10718549" target="_blank" rel="noopener">Consent Overview</a> in one container and explain to your buddy which tags have consent configured.</span></label>
+          </div>
+          <div class="week">
+            <header><h3>Practice with scenarios</h3><span class="wk">Week 3</span></header>
+            <label class="check"><input type="checkbox" id="c3-1"><span>Complete all five tasks in the <a href="#lab">scenario lab</a>.</span></label>
+            <label class="check"><input type="checkbox" id="c3-2"><span>Review your lab answers with your buddy and compare them with one real client container.</span></label>
+            <label class="check"><input type="checkbox" id="c3-3"><span>In Preview, open the Data Layer tab for one conversion event and match each value to the variable a tag uses.</span></label>
+          </div>
+          <div class="week">
+            <header><h3>Work on your own and present</h3><span class="wk">Week 4</span></header>
+            <label class="check"><input type="checkbox" id="c4-1"><span>Investigate one real question, such as a tag that didn't fire, using the <a href="#pitfalls">common problems</a> slide.</span></label>
+            <label class="check"><input type="checkbox" id="c4-2"><span>Give a 5-minute readout at the weekly team meeting that pairs one finding with one recommendation.</span></label>
+            <label class="check"><input type="checkbox" id="c4-3"><span>Work through <a href="#need-sst">Part III</a> and talk through the multi-brand retailer scenario with your buddy.</span></label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LAB INTRO -->
+    <section class="slide" id="lab" data-title="Scenario lab" data-group="Lab">
+      <div class="slide-inner">
+        <div class="slide-head">
+          <span class="eyebrow">Part II · Hands-on lab</span>
+          <h2>Scenario lab: plan the tagging for a fictional client</h2>
+          <p class="lead">Mistakes in a live container change what clients measure, so this lab is built on scenarios. You plan what you would set up for a made-up client, write it down, then compare with a model answer.</p>
+        </div>
+        <div class="callout warn"><strong>The client: Harbor Lane Coffee (fictional)</strong><p>An online coffee subscription business selling in the US, Germany and France. Its site runs on Cloudflare. It uses Google Analytics 4 and Google Ads, plus one third-party advertising pixel. A previous agency left a hard-coded Google tag on every page and a Tag Manager container in the agency's own account. There's no consent banner yet. Harbor Lane wants reliable purchase tracking, consent handled properly for its EU visitors, and asks whether server-side tagging is worth it. Its developer is available two days a week.</p></div>
+        <div class="setup-callout">
+          <strong>How it works</strong>
+          <p>Each task gives you a deliverable to write in the answer box. Your answers are saved in this browser. Open <em>Hint</em> if you're stuck, then <em>What a good answer looks like</em> to compare. If you have read access to one of our real client containers, each task suggests where to look to see the same thing in practice.</p>
+          <p><span class="badge unv">Optional</span> Tag Manager is free, so you can practice in a container of your own. Preview only works on a site where that container is installed, so use a test site, never a client's.</p>
+        </div>
+        <div class="toolbar"><button class="btn" type="button" id="reveal-all" aria-pressed="false">Show all hints and answers</button><span class="note">For trainers: opens every hint and model answer at once.</span></div>
+        <div class="task-list" id="task-list">
+          <a class="task-link" href="#task-1"><span class="num">Task 1</span><span>Plan accounts, containers and access.</span><span class="st" data-status="1">Not started</span></a>
+          <a class="task-link" href="#task-2"><span class="num">Task 2</span><span>Design the purchase data layer and trigger.</span><span class="st" data-status="2">Not started</span></a>
+          <a class="task-link" href="#task-3"><span class="num">Task 3</span><span>Set up consent mode for the US and the EU.</span><span class="st" data-status="3">Not started</span></a>
+          <a class="task-link" href="#task-4"><span class="num">Task 4</span><span>Test, publish and plan a rollback.</span><span class="st" data-status="4">Not started</span></a>
+          <a class="task-link" href="#task-5"><span class="num">Task 5</span><span>Decide on server-side tagging or the tag gateway.</span><span class="st" data-status="5">Not started</span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- TASK 1 -->
+    <section class="slide" id="task-1" data-title="Task 1 · Accounts and access" data-group="Lab">
+      <div class="slide-inner">
+        <div class="slide-head">
+          <span class="eyebrow">Lab · Task 1 of 5 · Accounts and access</span>
+          <h2>Plan accounts, containers and access.</h2>
+        </div>
+        <div class="task-grid">
+          <div class="panel">
+            <span class="k">Deliverable to record</span>
+            <p>Who should own the account, how many containers, who gets which permission, and what to do about the hard-coded Google tag.</p>
+            <label for="ans-1" class="k">Your answer</label>
+            <textarea id="ans-1" data-answer="1" placeholder="Account owner · containers&#10;Permissions by person or team&#10;Hard-coded Google tag plan…"></textarea>
+            <span class="k">What you'll understand afterwards</span>
+            <p>Why ownership and permissions are decided before any tag is built, and how a messy starting point is cleaned up safely.</p>
+          </div>
+          <div class="pitfalls">
+            <details class="reveal guide"><summary>Hint</summary><div><ul>
+              <li>Who should own the account if Harbor Lane changes agency again?</li>
+              <li>Which permission lets someone edit but not publish?</li>
+              <li>What happens to page views if both the hard-coded tag and Tag Manager send them?</li>
+            </ul></div></details>
+            <details class="reveal check-ans guide"><summary>What a good answer looks like</summary><div>
+              <ul>
+                <li><strong>Ownership:</strong> a Tag Manager account owned by Harbor Lane, with at least two admins from its own team. The agency's container is exported and imported into it (configuration can only move between containers by export and import or the API), then the agency is added as users.</li>
+                <li><strong>Containers:</strong> one web container for the one site.</li>
+                <li><strong>Permissions:</strong> agency and marketing staff on <em>Edit</em> or <em>Approve</em>; <em>Publish</em> limited to one or two trusted people; everyone else <em>Read</em>.</li>
+                <li><strong>Hard-coded tag:</strong> move its settings into the container's Google tag, then remove the snippet from the site in the same release, so page views aren't counted twice. Check for one page_view per page in Preview.</li>
+                <li>Also good: a custom environment for Harbor Lane's staging site.</li>
+              </ul>
+            </div></details>
+            <div class="callout"><strong>See it in a real container</strong><p>With read access, open Admin → User Management for one of our client accounts and note who has Publish. Then look at Admin → Environments.</p></div>
+            <p class="src">Source: <a href="https://support.google.com/tagmanager/answer/6103576" target="_blank" rel="noopener">Considerations before you install</a> · <a href="https://support.google.com/tagmanager/answer/6107011" target="_blank" rel="noopener">User permissions</a> · <a href="https://support.google.com/tagmanager/answer/6311518" target="_blank" rel="noopener">Environments</a> · <a href="https://support.google.com/tagmanager/answer/7582054" target="_blank" rel="noopener">Tag Manager vs. gtag.js</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TASK 2 -->
+    <section class="slide" id="task-2" data-title="Task 2 · Data layer and triggers" data-group="Lab">
+      <div class="slide-inner">
+        <div class="slide-head">
+          <span class="eyebrow">Lab · Task 2 of 5 · Data layer and triggers</span>
+          <h2>Design the purchase data layer and trigger.</h2>
+        </div>
+        <div class="task-grid">
+          <div class="panel">
+            <span class="k">Deliverable to record</span>
+            <p>What the developer should push to the data layer when an order completes, the trigger that fires the purchase tags, and the variables those tags read.</p>
+            <label for="ans-2" class="k">Your answer</label>
+            <textarea id="ans-2" data-answer="2" placeholder="Data layer push (event + values)&#10;Trigger · type · condition&#10;Variables · tags that use them"></textarea>
+            <span class="k">What you'll understand afterwards</span>
+            <p>How the site, the data layer, triggers and variables connect, and why business values shouldn't be read from the page's text.</p>
+          </div>
+          <div class="pitfalls">
+            <details class="reveal guide"><summary>Hint</summary><div><ul>
+              <li>GA4 has a recommended <code>purchase</code> event. Which values does it need?</li>
+              <li>Which trigger type listens for an event name pushed to the data layer?</li>
+              <li>What stops a purchase being counted twice if the confirmation page is reloaded?</li>
+            </ul></div></details>
+            <details class="reveal check-ans guide"><summary>What a good answer looks like</summary><div>
+              <ul>
+                <li><strong>Push:</strong> on the order confirmation, <code>dataLayer.push({ event: 'purchase', ecommerce: { transaction_id, value, currency, items: [...] } })</code>, following the GA4 ecommerce format, with the data layer created before the container snippet.</li>
+                <li><strong>Trigger:</strong> a Custom Event trigger where the event name equals <code>purchase</code>.</li>
+                <li><strong>Variables:</strong> Data Layer variables (version 2) for <code>ecommerce.transaction_id</code>, <code>ecommerce.value</code> and <code>ecommerce.currency</code>.</li>
+                <li><strong>Tags:</strong> the GA4 purchase event and the Google Ads conversion on that trigger, plus the third-party pixel if it's allowed under consent.</li>
+                <li><strong>Duplicates:</strong> the transaction ID lets GA4 recognize a repeated purchase; the developer should also push it only once per order.</li>
+              </ul>
+            </div></details>
+            <div class="callout"><strong>See it in a real container</strong><p>In Preview on a client site, complete a test conversion if the client allows it, then open the event's Data Layer and Variables tabs.</p></div>
+            <p class="src">Source: <a href="https://developers.google.com/tag-platform/devguides/datalayer" target="_blank" rel="noopener">The data layer</a> · <a href="https://developers.google.com/analytics/devguides/collection/ga4/ecommerce" target="_blank" rel="noopener">GA4 ecommerce</a> · <a href="https://support.google.com/tagmanager/answer/7683362" target="_blank" rel="noopener">User-defined variables</a> · <a href="https://support.google.com/tagmanager/topic/7679384" target="_blank" rel="noopener">Triggers</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TASK 3 -->
+    <section class="slide" id="task-3" data-title="Task 3 · Consent mode" data-group="Lab">
+      <div class="slide-inner">
+        <div class="slide-head">
+          <span class="eyebrow">Lab · Task 3 of 5 · Consent</span>
+          <h2>Set up consent mode for the US and the EU.</h2>
+        </div>
+        <div class="task-grid">
+          <div class="panel">
+            <span class="k">Deliverable to record</span>
+            <p>How the consent banner connects to Tag Manager, the default consent state by region, basic or advanced consent mode, and what happens to the third-party pixel.</p>
+            <label for="ans-3" class="k">Your answer</label>
+            <textarea id="ans-3" data-answer="3" placeholder="Banner · how it connects&#10;Defaults by region&#10;Basic or advanced · why&#10;Third-party pixel"></textarea>
+            <span class="k">What you'll understand afterwards</span>
+            <p>The order consent has to run in, how regions change the defaults, and how Google and non-Google tags are treated differently.</p>
+          </div>
+          <div class="pitfalls">
+            <details class="reveal guide"><summary>Hint</summary><div><ul>
+              <li>Which trigger runs before every other trigger?</li>
+              <li>Consent defaults accept a list of regions; the most specific region wins.</li>
+              <li>Google tags have built-in consent checks. Does the third-party pixel?</li>
+            </ul></div></details>
+            <details class="reveal check-ans guide"><summary>What a good answer looks like</summary><div>
+              <ul>
+                <li><strong>Banner:</strong> an integrated consent platform (for example Cookiebot, Usercentrics or CookieYes) set up from the Google tag's consent settings or with its Community Template Gallery template. No Custom HTML consent code.</li>
+                <li><strong>Defaults:</strong> on <em>Consent Initialization – All Pages</em>, all four consent types denied for Germany and France (<code>region: ['DE', 'FR']</code>); a separate default for other regions as Harbor Lane's legal team decides. Add <code>wait_for_update</code> (for example 500 ms) if the banner loads asynchronously.</li>
+                <li><strong>Mode:</strong> advanced lets Google model conversions from cookieless pings; basic sends nothing before consent. It's Harbor Lane's legal decision, not ours.</li>
+                <li><strong>Third-party pixel:</strong> set "Require additional consent for tag to fire" with <code>ad_storage</code> in its consent settings.</li>
+                <li><strong>Check:</strong> in Tag Assistant, confirm the default is set before any tag reads it, then accept and decline the banner and compare.</li>
+              </ul>
+              <p><span class="badge unv">Not legal advice</span> Which defaults each country needs is the client's legal decision.</p>
+            </div></details>
+            <div class="callout"><strong>See it in a real container</strong><p>Open Tags → Consent Overview in a client container, then a Google tag's Advanced Settings → Consent Settings.</p></div>
+            <p class="src">Source: <a href="https://developers.google.com/tag-platform/security/guides/consent" target="_blank" rel="noopener">Set up consent mode</a> · <a href="https://support.google.com/tagmanager/answer/10718549" target="_blank" rel="noopener">Tag Manager consent mode support</a> · <a href="https://support.google.com/tagmanager/answer/14546213" target="_blank" rel="noopener">Set up consent with a consent platform</a> · <a href="https://developers.google.com/tag-platform/security/concepts/consent-mode" target="_blank" rel="noopener">Consent mode overview</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TASK 4 -->
+    <section class="slide" id="task-4" data-title="Task 4 · Test and publish" data-group="Lab">
+      <div class="slide-inner">
+        <div class="slide-head">
+          <span class="eyebrow">Lab · Task 4 of 5 · Testing discipline</span>
+          <h2>Test, publish and plan a rollback.</h2>
+        </div>
+        <div class="task-grid">
+          <div class="panel">
+            <span class="k">Deliverable to record</span>
+            <p>A release plan for the new setup: what you check in Preview, where you publish first, the version name, and how you'd roll back.</p>
+            <label for="ans-4" class="k">Your answer</label>
+            <textarea id="ans-4" data-answer="4" placeholder="Preview checks&#10;Staging → live&#10;Version name · description&#10;Rollback plan"></textarea>
+            <span class="k">What you'll understand afterwards</span>
+            <p>How a change moves from draft to live safely, and how fast you can undo it.</p>
+          </div>
+          <div class="pitfalls">
+            <details class="reveal guide"><summary>Hint</summary><div><ul>
+              <li>Which Preview tabs show tags fired, data layer values and consent?</li>
+              <li>Harbor Lane has a staging site. Which feature lets it run a different version?</li>
+              <li>What does "Set as Latest Version" do, and what doesn't it do?</li>
+            </ul></div></details>
+            <details class="reveal check-ans guide"><summary>What a good answer looks like</summary><div>
+              <ul>
+                <li><strong>Preview:</strong> one page_view per page; the purchase tags fire only on the purchase event with the right values; the third-party pixel doesn't fire while consent is denied; no errors.</li>
+                <li><strong>Staging first:</strong> publish the version to the staging environment, test the checkout there, then publish the same version to Live.</li>
+                <li><strong>Version:</strong> a clear name and description, such as "Consent mode, purchase tracking, removed hard-coded tag".</li>
+                <li><strong>After release:</strong> watch GA4 and Google Ads conversions for several days.</li>
+                <li><strong>Rollback:</strong> publish the previous version from Versions. "Set as Latest Version" only resets the draft. The hard-coded snippet removal is a site change, so plan it with the developer.</li>
+              </ul>
+            </div></details>
+            <div class="callout"><strong>See it in a real container</strong><p>Open Versions in a client container and compare two versions to see what changed between them.</p></div>
+            <p class="src">Source: <a href="https://support.google.com/tagmanager/answer/6107056" target="_blank" rel="noopener">Preview and debug containers</a> · <a href="https://support.google.com/tagmanager/answer/6107163" target="_blank" rel="noopener">Publishing, versions and approvals</a> · <a href="https://support.google.com/tagmanager/answer/6311518" target="_blank" rel="noopener">Environments</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TASK 5 -->
+    <section class="slide" id="task-5" data-title="Task 5 · Server-side or gateway" data-group="Lab">
+      <div class="slide-inner">
+        <div class="slide-head">
+          <span class="eyebrow">Lab · Task 5 of 5 · Architecture</span>
+          <h2>Decide on server-side tagging or the tag gateway.</h2>
+        </div>
+        <div class="task-grid">
+          <div class="panel">
+            <span class="k">Deliverable to record</span>
+            <p>Your recommendation for Harbor Lane: tag gateway, server-side tagging, both or neither, with the reasons, costs and risks.</p>
+            <label for="ans-5" class="k">Your answer</label>
+            <textarea id="ans-5" data-answer="5" placeholder="Recommendation&#10;Why · cost · effort&#10;Risks and checks"></textarea>
+            <span class="k">What you'll understand afterwards</span>
+            <p>What each option solves, what it costs, and why the simplest option that meets the need is usually right.</p>
+          </div>
+          <div class="pitfalls">
+            <details class="reveal guide"><summary>Hint</summary><div><ul>
+              <li>Harbor Lane's site is already on Cloudflare, and most of its tags are Google's.</li>
+              <li>A server container runs on cloud servers someone has to pay for and maintain.</li>
+              <li>What does the gateway setup say about consent mode and automatic script insertion?</li>
+            </ul></div></details>
+            <details class="reveal check-ans guide"><summary>What a good answer looks like</summary><div>
+              <ul>
+                <li><strong>Start with the tag gateway on Cloudflare:</strong> Cloudflare says it's free, it serves Google tags from Harbor Lane's own domain, and Cloudflare's one-click setup adds the visitor location headers the gateway needs.</li>
+                <li><strong>Watch:</strong> it applies to the whole Cloudflare zone, including every subdomain. Because Harbor Lane uses consent mode, turn off automatic script insertion and keep the Google tag in Tag Manager.</li>
+                <li><strong>Server-side later, if needed:</strong> it would help control what the third-party pixel receives, but expect roughly $45–50 per server per month on Cloud Run, at least two or three servers for live traffic, a custom domain, and someone to maintain it. With a part-time developer, that's a later step.</li>
+                <li><strong>Check:</strong> after setup, Tag Assistant shows hits going to the measurement path and the gateway status shows Active.</li>
+              </ul>
+              <p><span class="badge unv">No single right answer</span> A client with many third-party tags or strict data controls might start with server-side.</p>
+            </div></details>
+            <div class="callout"><strong>See it in a real container</strong><p>In a client's Google tag settings, open Admin → Google tag gateway and note its status for each domain, if it's set up.</p></div>
+            <p class="src">Source: <a href="https://support.google.com/tagmanager/answer/16968707" target="_blank" rel="noopener">Gateway implementation flow</a> · <a href="https://support.google.com/tagmanager/answer/16061406" target="_blank" rel="noopener">Set up the gateway with Cloudflare</a> · <a href="https://developers.cloudflare.com/google-tag-gateway/" target="_blank" rel="noopener">Cloudflare: Google tag gateway</a> · <a href="https://support.google.com/tagmanager/answer/17141867" target="_blank" rel="noopener">How the gateway sets location</a> · <a href="https://developers.google.com/tag-platform/tag-manager/server-side/cloud-run-setup-guide" target="_blank" rel="noopener">Cloud Run setup and costs</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PART III -->
+    <!-- MODULE 1 -->
+    <section class="slide" id="need-sst" data-title="Server-side or the gateway?" data-group="Part III · Supporting Tag Manager">
+      <div class="slide-inner">
+        <div class="slide-head">
+          <span class="eyebrow">Part III · Module 1 of 4</span>
+          <h2>When does a client need server-side tagging or the tag gateway?</h2>
+          <p class="lead">Your job is to recognize the needs these options are built for, ask the right questions, then bring in a consultant to confirm.</p>
+        </div>
+        <div class="cols-2">
+          <div class="panel">
+            <span class="k">Signals that point to server-side tagging</span>
+            <ul class="links">
+              <li><strong>Control over what data leaves the site</strong>, such as removing personal information before it reaches vendors. <a href="https://support.google.com/tagmanager/answer/13387731" target="_blank" rel="noopener">Source</a></li>
+              <li><strong>Many tags slowing pages down</strong>: one request per event goes to the server instead of one per vendor. <a href="https://support.google.com/tagmanager/answer/2772488" target="_blank" rel="noopener">Source</a></li>
+              <li><strong>Cookies set from the client's own server</strong>, through a subdomain or a path on the same site. <a href="https://developers.google.com/tag-platform/tag-manager/server-side/custom-domain" target="_blank" rel="noopener">Source</a></li>
+              <li><strong>Data from apps or other servers</strong> sent in the Measurement Protocol format. <a href="https://developers.google.com/tag-platform/tag-manager/server-side/send-data" target="_blank" rel="noopener">Source</a></li>
+            </ul>
+          </div>
+          <div class="panel">
+            <span class="k">Signals that point to the tag gateway</span>
+            <ul class="links">
+              <li><strong>Mostly Google tags</strong>, and a wish for first-party measurement with little engineering. <a href="https://support.google.com/google-ads/answer/16214371" target="_blank" rel="noopener">Source</a></li>
+              <li><strong>Already on a supported CDN or load balancer</strong>: Cloudflare, Akamai, Fastly, CloudFront or Google Cloud. <a href="https://support.google.com/tagmanager/answer/16968707" target="_blank" rel="noopener">Source</a></li>
+              <li><span class="badge unv">Judgment</span> Neither option is a way around consent or ad blockers, and neither is worth it if nobody will maintain it. These are our views, not Google's wording.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="callout warn"><strong>Scenario</strong><p>A retailer with three brands runs its sites on Akamai. Each brand has its own Tag Manager container, and all three use consent mode. It asks you to "just switch on the Google tag gateway" for better measurement.</p></div>
+        <fieldset class="choices" id="m1-choices">
+          <legend>What would you recommend?</legend>
+          <label class="choice"><input type="radio" name="m1" value="leave"><span>Leave tagging as it is.</span></label>
+          <label class="choice"><input type="radio" name="m1" value="auto"><span>Turn on the gateway with Akamai's automated setup.</span></label>
+          <label class="choice"><input type="radio" name="m1" value="more"><span>Probably the gateway, but I need more information first.</span></label>
+        </fieldset>
+        <div class="feedback" id="m1-feedback" hidden></div>
+        <details class="reveal guide"><summary>Show the reasoning and the questions to ask</summary><div>
+          <p><strong>Why not the automated setup straight away:</strong> Google's Akamai guide says the integration supports only one Google tag configuration, and that several may make the gateway work incorrectly and be open to script injection. It also says sites using consent mode must turn off automated script setup. Three containers on consent mode hit both limits.</p>
+          <p><strong>What to find out before recommending:</strong></p>
+          <ol>
+            <li>Are the three brands on separate Akamai properties and domains, or one?</li>
+            <li>Could the brands share one container and one measurement path, or should they use the self-service setup?</li>
+            <li>Which measurement path would they use? Akamai's costs are only waived with its native template and a short path.</li>
+            <li>Does Akamai pass the visitor's country and region to Google? Manual setups must add these headers.</li>
+            <li>Who will own the Akamai configuration after launch?</li>
+          </ol>
+          <p>Bring in a technical consultant to confirm the setup before the recommendation goes to the client.</p>
+          <p class="src">Sources: <a href="https://support.google.com/google-ads/answer/16698389" target="_blank" rel="noopener">Set up the gateway with Akamai</a> · <a href="https://support.google.com/tagmanager/answer/16968707" target="_blank" rel="noopener">Gateway implementation flow</a> · <a href="https://support.google.com/tagmanager/answer/17141867" target="_blank" rel="noopener">How the gateway sets location</a></p>
+        </div></details>
+      </div>
+    </section>
+
+    <!-- MODULE 2 -->
+    <section class="slide" id="client-issues" data-title="Common client issues" data-group="Part III · Supporting Tag Manager">
+      <div class="slide-inner">
+        <div class="slide-head">
+          <span class="eyebrow">Part III · Module 2 of 4</span>
+          <h2>Recognizing common client issues</h2>
+          <p class="lead">You don't need to fix these. Ask good questions, check what you can, and know when to hand over. The causes listed are possibilities to investigate, not diagnoses.</p>
+        </div>
+        <div class="pitfalls">
+          <details class="pit" open>
+            <summary><span class="sym">1. "Our conversions dropped after we launched a cookie banner"</span><svg class="chev" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3l5 5-5 5"/></svg></summary>
+            <div class="pit-body">
+              <div class="kv"><span class="k">What the client sees</span><p>Fewer conversions in Google Ads or GA4 from the day the banner went live.</p></div>
+              <div class="kv"><span class="k">Ask first</span><ul><li>Which banner, and was it set up through Tag Manager?</li><li>Basic or advanced consent mode?</li><li>Which countries saw the drop?</li></ul></div>
+              <div class="kv"><span class="k">Possible causes</span><p>Expected drop from visitors declining; Google tags fully blocked so no cookieless pings; consent default running after the tags; the banner's auto-blocking catching Google tags.</p></div>
+              <div class="kv"><span class="k">You can check</span><p>In Preview or Tag Assistant: whether Google tags fire with denied consent, and when the default is set.</p></div>
+              <div class="kv"><span class="k">Escalate when</span><p>Consent settings or triggers need changing. That affects legal compliance.</p></div>
+            </div>
+            <p class="src">Source: <a href="https://support.google.com/tagmanager/answer/12962079" target="_blank" rel="noopener">Unblock Google tags with consent mode</a> · <a href="https://developers.google.com/tag-platform/security/guides/consent" target="_blank" rel="noopener">Set up consent mode</a></p>
+          </details>
+          <details class="pit">
+            <summary><span class="sym">2. "Our numbers changed after the container was optimized"</span><svg class="chev" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3l5 5-5 5"/></svg></summary>
+            <div class="pit-body">
+              <div class="kv"><span class="k">What the client sees</span><p>Page views, sessions or conversions shift after the optimization banner was accepted or the Google tag was unified with Tag Manager.</p></div>
+              <div class="kv"><span class="k">Ask first</span><ul><li>Which version introduced it, and when was it published?</li><li>Did the Google tags have different settings before they were combined?</li><li>Is there still a <code>gtag('config')</code> command on the page?</li></ul></div>
+              <div class="kv"><span class="k">Possible causes</span><p>Shared settings (domains, cookie settings, internal traffic) now apply to every destination; the legacy gtag('config') setting changed; config commands firing wildcard Custom Event triggers.</p></div>
+              <div class="kv"><span class="k">You can check</span><p>Compare the two versions in Versions, and the Settings tab's Google destinations.</p></div>
+              <div class="kv"><span class="k">Escalate when</span><p>A rollback or settings change is needed.</p></div>
+            </div>
+            <p class="src">Source: <a href="https://support.google.com/tagmanager/answer/16659369" target="_blank" rel="noopener">Optimize your container</a> · <a href="https://support.google.com/tagmanager/answer/18411054" target="_blank" rel="noopener">Legacy gtag('config') behavior</a> · <a href="https://support.google.com/tagmanager/answer/4620708" target="_blank" rel="noopener">Release notes</a></p>
+          </details>
+          <details class="pit">
+            <summary><span class="sym">3. "Our developer says Tag Manager is slowing the site"</span><svg class="chev" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3l5 5-5 5"/></svg></summary>
+            <div class="pit-body">
+              <div class="kv"><span class="k">What the client sees</span><p>Slow pages, or a performance tool pointing at the container.</p></div>
+              <div class="kv"><span class="k">Ask first</span><ul><li>How many tags, and how many are Custom HTML?</li><li>Is one container shared across several sites?</li></ul></div>
+              <div class="kv"><span class="k">Possible causes</span><p>A large container (the Versions page shows a size indicator; Google suggests optimizing above 70%); many Custom HTML tags or Custom JavaScript variables; unused tags; very long lookup tables.</p></div>
+              <div class="kv"><span class="k">You can check</span><p>The container size indicator and how many tags are paused or unused.</p></div>
+              <div class="kv"><span class="k">Escalate when</span><p>Tags need consolidating or moving to server-side tagging.</p></div>
+            </div>
+            <p class="src">Source: <a href="https://support.google.com/tagmanager/answer/2772488" target="_blank" rel="noopener">Manage container size and efficiency</a></p>
+          </details>
+          <details class="pit">
+            <summary><span class="sym">4. "Someone published a change we didn't approve"</span><svg class="chev" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3l5 5-5 5"/></svg></summary>
+            <div class="pit-body">
+              <div class="kv"><span class="k">What the client sees</span><p>A tag changed or appeared on the live site without sign-off.</p></div>
+              <div class="kv"><span class="k">Ask first</span><ul><li>Which version, and who published it?</li><li>How many people have Publish permission?</li></ul></div>
+              <div class="kv"><span class="k">Possible causes</span><p>Too many users with Publish; no approval process (approvals need Tag Manager 360); an agency publishing directly.</p></div>
+              <div class="kv"><span class="k">You can check</span><p>Versions shows who published what. User Management shows who holds Publish.</p></div>
+              <div class="kv"><span class="k">Escalate when</span><p>Permissions need changing (only an admin can), or the change must be rolled back.</p></div>
+            </div>
+            <p class="src">Source: <a href="https://support.google.com/tagmanager/answer/6107011" target="_blank" rel="noopener">User permissions</a> · <a href="https://support.google.com/tagmanager/answer/6107163" target="_blank" rel="noopener">Publishing, versions and approvals</a></p>
+          </details>
+          <details class="pit">
+            <summary><span class="sym">5. The tag gateway shows "Pending", or reports show the wrong countries</span><svg class="chev" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3l5 5-5 5"/></svg></summary>
+            <div class="pit-body">
+              <div class="kv"><span class="k">What the client sees</span><p>A domain stuck on Pending, Paused or Not started, or GA4 locations clustered on the CDN's location after the gateway went live.</p></div>
+              <div class="kv"><span class="k">Ask first</span><ul><li>Automated or manual setup, and on which CDN?</li><li>When was it turned on?</li></ul></div>
+              <div class="kv"><span class="k">Possible causes</span><p>Pending means it's enabled but no diagnostics have arrived yet. Wrong locations usually mean a manual setup isn't sending the visitor's country and region headers, or is altering the visitor's IP address.</p></div>
+              <div class="kv"><span class="k">You can check</span><p>The gateway status per domain, and hits to the measurement path in Tag Assistant.</p></div>
+              <div class="kv"><span class="k">Escalate when</span><p>CDN rules or headers need changing. Wrong regions can also make regional consent defaults misfire.</p></div>
+            </div>
+            <p class="src">Source: <a href="https://support.google.com/tagmanager/answer/16061641" target="_blank" rel="noopener">Gateway with Cloudflare in Tag Manager</a> · <a href="https://support.google.com/tagmanager/answer/17141867" target="_blank" rel="noopener">How the gateway sets location</a></p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODULE 3 -->
+    <section class="slide" id="architecture" data-title="Tag Manager architecture" data-group="Part III · Supporting Tag Manager">
+      <div class="slide-inner">
+        <div class="slide-head">
+          <span class="eyebrow">Part III · Module 3 of 4</span>
+          <h2>Tag Manager enterprise architecture</h2>
+          <p class="lead">Three building blocks come up in almost every enterprise conversation.</p>
+        </div>
+        <div class="arch">
+          <div class="panel">
+            <span class="badge p360">Tag Manager</span>
+            <h3>Accounts, containers and permissions</h3>
+            <p>One account per organization, one container per site, with workspaces, versions and environments.</p>
+            <span class="k">Why organizations use it</span>
+            <ul><li>Agencies and teams can edit without being able to publish.</li><li>Every change is versioned and can be rolled back.</li><li>Staging sites can run a different version from Live.</li></ul>
+            <span class="k">Limitations</span>
+            <ul><li>Configuration can't be shared between containers except by export and import or the API.</li><li>Approval workflows and Zones need Tag Manager 360.</li><li>Publishing a container publishes it on every domain it's installed on.</li></ul>
+            <details class="reveal guide"><summary>Scenario</summary><div><p>A group with five country sites gives each site its own container, lets local teams Edit, and keeps Publish with a central analytics team.</p></div></details>
+            <p class="src">Source: <a href="https://support.google.com/tagmanager/answer/6103576" target="_blank" rel="noopener">Considerations before you install</a> · <a href="https://support.google.com/tagmanager/answer/6107011" target="_blank" rel="noopener">User permissions</a> · <a href="https://support.google.com/tagmanager/answer/2772488" target="_blank" rel="noopener">Container size (Zones)</a></p>
+          </div>
+          <div class="panel">
+            <span class="badge p360">Google tag + consent</span>
+            <h3>Destinations and consent mode</h3>
+            <p>The Google tag sends to GA4, Google Ads and Floodlight, governed by consent mode.</p>
+            <span class="k">Why organizations use it</span>
+            <ul><li>One place for cross-domain, internal traffic and cookie settings.</li><li>Consent defaults by region, with modeling for unobserved conversions.</li><li>Consent Overview to review every tag's consent settings at once.</li></ul>
+            <span class="k">Limitations</span>
+            <ul><li>Shared settings apply to every destination on the tag.</li><li>Tag Manager's consent settings support only TCF Purpose 1 for the IAB framework.</li><li>Consent mode doesn't store the choice; the banner must.</li></ul>
+            <details class="reveal guide"><summary>Scenario</summary><div><p>A publisher uses an integrated consent platform with denied defaults in the EEA and a consent mode override in the Google tag as a safety net.</p></div></details>
+            <p class="src">Source: <a href="https://support.google.com/tagmanager/answer/12131703" target="_blank" rel="noopener">Google tag settings</a> · <a href="https://support.google.com/tagmanager/answer/10718549" target="_blank" rel="noopener">Consent mode support</a> · <a href="https://support.google.com/tagmanager/answer/12962079" target="_blank" rel="noopener">Consent mode override</a></p>
+          </div>
+          <div class="panel">
+            <span class="badge p360">Server-side + gateway</span>
+            <h3>First-party data collection</h3>
+            <p>A server container on the client's cloud, and the gateway serving Google tags from the client's domain.</p>
+            <span class="k">Why organizations use it</span>
+            <ul><li>Clean or remove data before vendors receive it, with transformations.</li><li>Fewer browser requests and server-set cookies.</li><li>Google tags served from the client's own domain.</li></ul>
+            <span class="k">Limitations</span>
+            <ul><li>Server-side tagging needs cloud servers, a custom domain and ongoing maintenance.</li><li>The Cloudflare gateway applies to the whole zone, and Akamai and Fastly support one Google tag configuration.</li><li>Only Google first-party cookies pass through the gateway; others are dropped.</li></ul>
+            <details class="reveal guide"><summary>Scenario</summary><div><p>A retailer runs server-side tagging on Cloud Run behind a load balancer, turns on the gateway in the server container, and strips email addresses from events before they reach a third-party tool.</p></div></details>
+            <p class="src">Source: <a href="https://developers.google.com/tag-platform/tag-manager/server-side/transformations" target="_blank" rel="noopener">Transformations</a> · <a href="https://developers.google.com/tag-platform/tag-manager/server-side/custom-domain" target="_blank" rel="noopener">Custom domains</a> · <a href="https://developers.cloudflare.com/google-tag-gateway/" target="_blank" rel="noopener">Cloudflare gateway</a> · <a href="https://support.google.com/tagmanager/answer/16960855" target="_blank" rel="noopener">Gateway cookie handling</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODULE 4 -->
+    <section class="slide" id="costs" data-title="Costs, 360 and support" data-group="Part III · Supporting Tag Manager">
+      <div class="slide-inner">
+        <div class="slide-head">
+          <span class="eyebrow">Part III · Module 4 of 4</span>
+          <h2>Understanding costs, Tag Manager 360 and support</h2>
+          <p class="lead">Tag Manager itself is free, so clients are often surprised by a bill. Three things explain most of it.</p>
+        </div>
+        <div class="arch">
+          <div class="panel">
+            <span class="badge p360">Platform</span>
+            <h3>1. Tag Manager and Tag Manager 360</h3>
+            <p>Standard Tag Manager has no fee. Tag Manager 360 is part of Google Marketing Platform and adds approval workflows, Zones for large containers, and enterprise support.</p>
+            <p class="src">Source: <a href="https://support.google.com/tagmanager/answer/6377366" target="_blank" rel="noopener">About Tag Manager 360</a> · <a href="https://support.google.com/tagmanager/answer/6107163" target="_blank" rel="noopener">Approvals</a> · <a href="https://support.google.com/tagmanager/answer/6357156" target="_blank" rel="noopener">Tag Manager 360 support</a></p>
+          </div>
+          <div class="panel">
+            <span class="badge">Cloud</span>
+            <h3>2. Server-side hosting</h3>
+            <p>The automatically created setup is for testing only. For live traffic, Google estimates about $45–50 per server per month on Cloud Run, with at least two servers (Google's pages say two or three), plus network and logging costs. Request logs can be excluded at high volume to save money.</p>
+            <p class="src">Source: <a href="https://developers.google.com/tag-platform/tag-manager/server-side/cloud-run-setup-guide" target="_blank" rel="noopener">Cloud Run setup guide</a> · <a href="https://developers.google.com/tag-platform/tag-manager/server-side/overview" target="_blank" rel="noopener">Server-side overview</a></p>
+          </div>
+          <div class="panel">
+            <span class="badge">Gateway</span>
+            <h3>3. Tag gateway costs</h3>
+            <p>Cloudflare says its gateway is free and doesn't count toward other Cloudflare billing. On Google Cloud, the integration is free but the load balancer's usage is billed (Google says Google Ads covers the extra processing). On Akamai, serving costs are waived only with the native template and a short measurement path.</p>
+            <p class="src">Source: <a href="https://developers.cloudflare.com/google-tag-gateway/" target="_blank" rel="noopener">Cloudflare gateway</a> · <a href="https://support.google.com/tagmanager/answer/16816376" target="_blank" rel="noopener">Gateway with Google Cloud Load Balancer</a> · <a href="https://support.google.com/google-ads/answer/16698389" target="_blank" rel="noopener">Gateway with Akamai</a></p>
+          </div>
+        </div>
+        <div class="callout warn"><strong>Scenario</strong><p>A client asks: "Tag Manager is free, so why are we getting a Google Cloud bill?"</p></div>
+        <details class="reveal guide"><summary>Show a good answer</summary><div>
+          <p>"Tag Manager itself is free. The bill comes from the server-side tagging setup, which runs on servers in your own Google Cloud project. You pay for those servers, the data they send and their logs, like any cloud service. Google estimates about $45 to $50 per server per month, and recommends at least two servers for live traffic."</p>
+          <p>Then offer to review the project's server count, autoscaling limits and logging settings with your technical team. Never quote a client's exact cost without looking at their billing report.</p>
+        </div></details>
+      </div>
+    </section>
+
+    <!-- SOURCES -->
+    <section class="slide" id="sources" data-title="Official documentation" data-group="Reference">
+      <div class="slide-inner">
+        <div class="slide-head">
+          <span class="eyebrow">Reference</span>
+          <h2>Official Google documentation</h2>
+          <p class="lead">Every technical claim on this site was checked against these pages on 23 November 2026. Google updates them regularly, so check the current version before quoting a limit.</p>
+        </div>
+        <div class="doc-groups">
+          <div class="panel"><span class="k">Setup, accounts and publishing</span><ul>
+            <li><a href="https://support.google.com/tagmanager/answer/6102821" target="_blank" rel="noopener">Introduction to Tag Manager</a> and <a href="https://support.google.com/tagmanager/answer/6103576" target="_blank" rel="noopener">considerations before you install</a></li>
+            <li><a href="https://support.google.com/tagmanager/answer/6107011" target="_blank" rel="noopener">User permissions</a> and <a href="https://support.google.com/tagmanager/answer/6311518" target="_blank" rel="noopener">environments</a></li>
+            <li><a href="https://support.google.com/tagmanager/answer/6107056" target="_blank" rel="noopener">Preview and debug</a> and <a href="https://support.google.com/tagmanager/answer/6107163" target="_blank" rel="noopener">publishing and versions</a></li>
+            <li><a href="https://support.google.com/tagmanager/answer/2772488" target="_blank" rel="noopener">Container size</a> and <a href="https://support.google.com/tagmanager/answer/6328489" target="_blank" rel="noopener">malware detection</a></li>
+            <li><a href="https://support.google.com/tagmanager/answer/4620708" target="_blank" rel="noopener">Release notes</a> (product changes by date)</li>
+          </ul></div>
+          <div class="panel"><span class="k">Tags, triggers, variables and data layer</span><ul>
+            <li><a href="https://support.google.com/tagmanager/answer/6103657" target="_blank" rel="noopener">Components of Tag Manager</a></li>
+            <li><a href="https://support.google.com/tagmanager/topic/7679384" target="_blank" rel="noopener">Triggers</a> and <a href="https://support.google.com/tagmanager/answer/7679319" target="_blank" rel="noopener">page view triggers</a></li>
+            <li><a href="https://support.google.com/tagmanager/answer/7182738" target="_blank" rel="noopener">Built-in variables</a> and <a href="https://support.google.com/tagmanager/answer/7683362" target="_blank" rel="noopener">user-defined variables</a></li>
+            <li><a href="https://developers.google.com/tag-platform/devguides/datalayer" target="_blank" rel="noopener">The data layer</a> and <a href="https://developers.google.com/tag-platform/tag-manager/templates" target="_blank" rel="noopener">custom templates</a></li>
+          </ul></div>
+          <div class="panel"><span class="k">Google tag and consent</span><ul>
+            <li><a href="https://support.google.com/tagmanager/answer/7582054" target="_blank" rel="noopener">Tag Manager vs. gtag.js</a> and <a href="https://support.google.com/tagmanager/answer/12131703" target="_blank" rel="noopener">Google tag settings</a></li>
+            <li><a href="https://support.google.com/tagmanager/answer/16659369" target="_blank" rel="noopener">Optimize your container</a> and <a href="https://support.google.com/tagmanager/answer/18411054" target="_blank" rel="noopener">legacy gtag('config')</a></li>
+            <li><a href="https://developers.google.com/tag-platform/security/concepts/consent-mode" target="_blank" rel="noopener">Consent mode overview</a> and <a href="https://developers.google.com/tag-platform/security/guides/consent" target="_blank" rel="noopener">setup guide</a></li>
+            <li><a href="https://support.google.com/tagmanager/answer/10718549" target="_blank" rel="noopener">Consent mode in Tag Manager</a>, <a href="https://support.google.com/tagmanager/answer/14546213" target="_blank" rel="noopener">consent platforms</a> and <a href="https://support.google.com/tagmanager/answer/12962079" target="_blank" rel="noopener">unblocking tags</a></li>
+          </ul></div>
+          <div class="panel"><span class="k">Server-side and the tag gateway</span><ul>
+            <li><a href="https://support.google.com/tagmanager/answer/13387731" target="_blank" rel="noopener">Client-side vs. server-side</a> and <a href="https://developers.google.com/tag-platform/tag-manager/server-side/intro" target="_blank" rel="noopener">introduction to server-side</a></li>
+            <li><a href="https://developers.google.com/tag-platform/tag-manager/server-side/cloud-run-setup-guide" target="_blank" rel="noopener">Cloud Run setup</a> and <a href="https://developers.google.com/tag-platform/tag-manager/server-side/custom-domain" target="_blank" rel="noopener">custom domains</a></li>
+            <li><a href="https://support.google.com/tagmanager/answer/16968707" target="_blank" rel="noopener">Gateway implementation flow</a> and <a href="https://support.google.com/tagmanager/answer/16222402" target="_blank" rel="noopener">CDN setup</a></li>
+            <li><a href="https://developers.google.com/tag-platform/learn/sst-fundamentals" target="_blank" rel="noopener">Server-side tagging fundamentals course</a></li>
+          </ul></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINISH -->
+    <section class="slide" id="finish" data-title="Your progress" data-group="Wrap-up">
+      <div class="slide-inner">
+        <div class="slide-head">
+          <span class="eyebrow">Wrap-up</span>
+          <h2>Your progress</h2>
+          <p class="lead">Your goal for day 30 is a short readout at the team meeting: one finding, what it means, and what we should do about it.</p>
+        </div>
+        <span class="sync" data-sync></span>
+        <div class="stats">
+          <div class="stat"><span class="n" id="stat-checks">0 / 14</span><span class="l">of your checklist items done</span></div>
+          <div class="stat"><span class="n" id="stat-lab">0 / 5</span><span class="l">of your lab tasks answered</span></div>
+        </div>
+        <div class="panel">
+          <span class="k">Useful tools</span>
+          <ul class="links">
+            <li><a href="https://support.google.com/tagmanager/" target="_blank" rel="noopener">Tag Manager Help Center</a>: current features, limits and definitions</li>
+            <li><a href="https://developers.google.com/tag-platform/learn" target="_blank" rel="noopener">Tag Platform Learning Center</a>: Google's learning pathways, including server-side tagging fundamentals</li>
+            <li><a href="https://tagassistant.google.com/" target="_blank" rel="noopener">Tag Assistant</a>: preview and debug any container you have access to</li>
+            <li><a href="https://support.google.com/tagmanager/answer/4620708" target="_blank" rel="noopener">Tag Manager release notes</a>: what's changing and when</li>
+            <li><a href="https://gmp-onboarding.zarapalevani.com" target="_blank" rel="noopener">GMP team onboarding</a>: the guides for GA4, Search Ads 360, Display &amp; Video 360 and the rest of the platform</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<div class="jumper" id="jumper" role="dialog" aria-modal="true" aria-label="Jump to a slide" hidden>
+  <div class="jumper-panel">
+    <div class="jumper-head">
+      <input id="jump-filter" type="text" placeholder="Type a slide name or number" aria-label="Filter slides" autocomplete="off">
+      <button class="icon-btn" type="button" id="jump-close" aria-label="Close"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>
+    </div>
+    <div class="jumper-list" id="jump-list"></div>
+    <div class="jumper-foot"><kbd>↑</kbd> <kbd>↓</kbd> choose · <kbd>Enter</kbd> go · <kbd>Esc</kbd> close</div>
+  </div>
+</div>
+
+<div class="presentbar" role="toolbar" aria-label="Slide controls">
+  <div class="bar" id="pbar"></div>
+  <button class="event-chip" type="button" id="event-chip" aria-haspopup="dialog" title="Jump to a slide (G)"><b>slide_view</b> · 01/21</button>
+  <span class="spacer"></span>
+  <span class="note hint"><kbd>←</kbd> <kbd>→</kbd> · <kbd>G</kbd> jump</span>
+  <button class="btn" type="button" id="jump-btn" aria-haspopup="dialog"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>Slides</button>
+  <button class="icon-btn" type="button" id="prev-btn" aria-label="Previous slide"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 3L5 8l5 5"/></svg></button>
+  <button class="icon-btn" type="button" id="next-btn" aria-label="Next slide"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3l5 5-5 5"/></svg></button>
+  <button class="icon-btn theme-btn" type="button" data-theme-toggle aria-label="Switch between light and dark mode"><svg class="moon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M13.5 9.5A5.5 5.5 0 0 1 6.5 2.5a5.5 5.5 0 1 0 7 7z"/></svg><svg class="sun" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="8" cy="8" r="3"/><path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3 3l1 1M12 12l1 1M3 13l1-1M12 4l1-1"/></svg></button>
+  <button class="btn" type="button" id="exit-btn">Exit</button>
+</div>
+
+<script>
+(function () {
+  var KEY = 'gtm-onboarding-v1';
+  var state = { checks: {}, answers: {} };
+  try {
+    var raw = localStorage.getItem(KEY);
+    if (raw) { var s = JSON.parse(raw); if (s && typeof s === 'object') { state.checks = s.checks || {}; state.answers = s.answers || {}; } }
+  } catch (e) {}
+  function $(id) { return document.getElementById(id); }
+
+  /* ---------- slides & TOC ---------- */
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var toc = $('toc'), lastGroup = null, tocLinks = {};
+  slides.forEach(function (s) {
+    var g = s.getAttribute('data-group');
+    if (g !== lastGroup) { var h = document.createElement('h4'); h.textContent = g; toc.appendChild(h); lastGroup = g; }
+    var a = document.createElement('a'); a.href = '#' + s.id; a.textContent = s.getAttribute('data-title');
+    toc.appendChild(a); tocLinks[s.id] = a;
+  });
+  /* mobile section menu */
+  var tocBtn = $('toc-btn');
+  function setToc(open) { document.body.classList.toggle('toc-open', open); tocBtn.setAttribute('aria-expanded', open ? 'true' : 'false'); }
+  tocBtn.addEventListener('click', function () { setToc(!document.body.classList.contains('toc-open')); });
+  toc.addEventListener('click', function (e) { if (e.target.closest('a')) setToc(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && document.body.classList.contains('toc-open')) setToc(false); });
+  /* label table cells for the stacked mobile layout */
+  document.querySelectorAll('.table-wrap table').forEach(function (t) {
+    var heads = Array.prototype.map.call(t.querySelectorAll('thead th'), function (h) { return h.textContent; });
+    t.querySelectorAll('tbody tr').forEach(function (r) {
+      Array.prototype.forEach.call(r.children, function (c, i) { if (c.tagName === 'TD' && heads[i]) c.setAttribute('data-label', heads[i]); });
+    });
+  });
+
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) {
+          Object.keys(tocLinks).forEach(function (k) { tocLinks[k].classList.remove('active'); });
+          if (tocLinks[en.target.id]) tocLinks[en.target.id].classList.add('active');
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    slides.forEach(function (s) { io.observe(s); });
+  }
+
+  var cur = 0;
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function show(i) {
+    cur = Math.max(0, Math.min(slides.length - 1, i));
+    slides.forEach(function (s, j) { s.classList.toggle('current', j === cur); });
+    slides[cur].scrollTop = 0;
+    $('event-chip').innerHTML = '<b>slide_view</b> · ' + pad(cur + 1) + '/' + pad(slides.length) + ' · ' + slides[cur].getAttribute('data-title');
+    $('pbar').style.width = ((cur + 1) / slides.length * 100) + '%';
+    try { history.replaceState(null, '', '#' + slides[cur].id); } catch (e) {}
+  }
+  function isPresent() { return document.body.classList.contains('present'); }
+  function enterPresent() {
+    var idx = 0, top = (document.querySelector('.topbar').getBoundingClientRect().bottom || 0) + 40;
+    for (var i = 0; i < slides.length; i++) { if (slides[i].getBoundingClientRect().bottom > top) { idx = i; break; } }
+    document.body.classList.add('present');
+    show(idx);
+    $('next-btn').focus();
+  }
+  function exitPresent() {
+    jumper.hidden = true;
+    document.body.classList.remove('present');
+    slides[cur].scrollIntoView({ block: 'start' });
+    $('present-btn').focus();
+  }
+  $('present-btn').addEventListener('click', enterPresent);
+  document.querySelectorAll('[data-action="present"]').forEach(function (b) { b.addEventListener('click', enterPresent); });
+  $('exit-btn').addEventListener('click', exitPresent);
+  $('prev-btn').addEventListener('click', function () { show(cur - 1); });
+  $('next-btn').addEventListener('click', function () { show(cur + 1); });
+
+  /* jump to any slide while presenting */
+  var jumper = $('jumper'), jumpList = $('jump-list'), jumpFilter = $('jump-filter'), jumpItems = [], jumpHl = -1, jumpReturn = null;
+  function buildJumpList() {
+    jumpList.innerHTML = ''; jumpItems = [];
+    var lastG = null;
+    slides.forEach(function (sl, i) {
+      var g = sl.getAttribute('data-group');
+      if (g !== lastG) { var h = document.createElement('h4'); h.textContent = g; jumpList.appendChild(h); lastG = g; }
+      var b = document.createElement('button'); b.type = 'button';
+      var num = document.createElement('span'); num.className = 'num'; num.textContent = pad(i + 1);
+      var t = document.createElement('span'); t.textContent = sl.getAttribute('data-title');
+      b.appendChild(num); b.appendChild(t);
+      b.addEventListener('click', function () { closeJumper(); show(i); });
+      jumpList.appendChild(b);
+      jumpItems.push({ el: b, i: i, text: (pad(i + 1) + ' ' + (i + 1) + ' ' + sl.getAttribute('data-title') + ' ' + g).toLowerCase(), heading: b.previousElementSibling && b.previousElementSibling.tagName === 'H4' ? b.previousElementSibling : null });
+    });
+  }
+  function visibleJump() { return jumpItems.filter(function (it) { return !it.el.hidden; }); }
+  function highlight(k) {
+    var vis = visibleJump(); jumpItems.forEach(function (it) { it.el.classList.remove('hl'); });
+    if (!vis.length) { jumpHl = -1; return; }
+    jumpHl = Math.max(0, Math.min(vis.length - 1, k)); vis[jumpHl].el.classList.add('hl'); vis[jumpHl].el.scrollIntoView({ block: 'nearest' });
+  }
+  function filterJump() {
+    var q = jumpFilter.value.trim().toLowerCase();
+    jumpItems.forEach(function (it) { it.el.hidden = !!q && it.text.indexOf(q) === -1 && String(it.i + 1) !== q; });
+    jumpList.querySelectorAll('h4').forEach(function (h) {
+      var el = h.nextElementSibling, any = false;
+      while (el && el.tagName !== 'H4') { if (!el.hidden) any = true; el = el.nextElementSibling; }
+      h.hidden = !any;
+    });
+    var vis = visibleJump(), exact = vis.findIndex(function (it) { return String(it.i + 1) === q; });
+    highlight(exact >= 0 ? exact : 0);
+  }
+  function openJumper() {
+    if (!isPresent()) enterPresent();
+    jumpReturn = document.activeElement;
+    jumpItems.forEach(function (it) { it.el.setAttribute('aria-current', it.i === cur ? 'true' : 'false'); });
+    jumpFilter.value = ''; filterJump();
+    jumper.hidden = false;
+    var vis = visibleJump(), at = vis.findIndex(function (it) { return it.i === cur; }); highlight(at);
+    jumpFilter.focus();
+  }
+  function closeJumper() { jumper.hidden = true; if (jumpReturn && jumpReturn.focus) jumpReturn.focus(); }
+  buildJumpList();
+  $('jump-btn').addEventListener('click', openJumper);
+  $('event-chip').addEventListener('click', openJumper);
+  $('jump-close').addEventListener('click', closeJumper);
+  jumper.addEventListener('click', function (e) { if (e.target === jumper) closeJumper(); });
+  jumpFilter.addEventListener('input', filterJump);
+  jumpFilter.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowDown') { e.preventDefault(); highlight(jumpHl + 1); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); highlight(jumpHl - 1); }
+    else if (e.key === 'Enter') { e.preventDefault(); var vis = visibleJump(); if (vis[jumpHl]) { var i = vis[jumpHl].i; closeJumper(); show(i); } }
+    else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); closeJumper(); }
+  });
+
+  document.addEventListener('keydown', function (e) {
+    var t = e.target, tag = t && t.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (t && t.isContentEditable)) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (!jumper.hidden) { if (e.key === 'Escape') { e.preventDefault(); closeJumper(); } return; }
+    if (e.key === 'g' || e.key === 'G') { e.preventDefault(); openJumper(); return; }
+    if (e.key === 'p' || e.key === 'P') { e.preventDefault(); isPresent() ? exitPresent() : enterPresent(); return; }
+    if (e.key === 't' || e.key === 'T') { e.preventDefault(); document.querySelector('[data-theme-toggle]').click(); return; }
+    if (!isPresent()) return;
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || (e.key === ' ' && tag !== 'BUTTON' && tag !== 'SUMMARY')) { e.preventDefault(); show(cur + 1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); show(cur - 1); }
+    else if (e.key === 'Home') { e.preventDefault(); show(0); }
+    else if (e.key === 'End') { e.preventDefault(); show(slides.length - 1); }
+    else if (e.key === 'Escape') { e.preventDefault(); exitPresent(); }
+  });
+  var tx = null, ty = null;
+  $('deck').addEventListener('touchstart', function (e) { if (!isPresent()) return; tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true });
+  $('deck').addEventListener('touchend', function (e) {
+    if (!isPresent() || tx === null) return;
+    var dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) show(cur + (dx < 0 ? 1 : -1));
+    tx = null;
+  }, { passive: true });
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (!a || !isPresent()) return;
+    var id = a.getAttribute('href').slice(1);
+    var idx = slides.findIndex(function (s) { return s.id === id; });
+    if (idx >= 0) { e.preventDefault(); show(idx); }
+  });
+
+  /* ---------- ecosystem ---------- */
+  var eco = {
+    site: ['https://developers.google.com/tag-platform/devguides/datalayer', 'the website and data layer', 'The site loads the container snippets and pushes events and business values, such as a purchase and its total, to the data layer for tags to use. Values only last for the current page.', 'A value is missing or wrong in a tag, a new conversion needs tracking, or the site is being redesigned and tags read values from the page.'],
+    consent: ['https://support.google.com/tagmanager/answer/14546213', 'consent banners (CMPs)', 'Ask visitors for consent, store their choice, and pass it to Google tags through consent mode, usually with a Community Template Gallery template that runs on the Consent Initialization trigger.', 'Launching in a region that needs consent, investigating a drop in conversions after a banner went live, or checking that tags respect a visitor’s choice.'],
+    gtm: ['https://support.google.com/tagmanager/answer/6102821', 'Google Tag Manager', 'Holds the tags, triggers and variables for a site, decides when each tag fires based on events and consent, and keeps every published change as a version you can preview, compare and roll back.', 'Adding or changing a tag, checking why a tag did or didn’t fire, controlling who can publish, or testing a change in Preview before it goes live.'],
+    google: ['https://support.google.com/tagmanager/answer/12131703', 'Google destinations', 'Google Analytics, Google Ads and Floodlight receive data from the Google tag. Shared settings such as cross-domain linking, internal traffic and consent overrides apply to every destination on the tag.', 'Setting up GA4 or conversion tracking, checking why numbers changed after a container was optimized, or linking a new Google product.'],
+    server: ['https://support.google.com/tagmanager/answer/13387731', 'server-side tagging and the tag gateway', 'A server container on the client’s own cloud receives events and forwards them to vendors, and the Google tag gateway serves Google tags from the client’s own domain through a CDN, load balancer or server container.', 'A client wants control over what data leaves the site, fewer browser requests, server-set cookies, or first-party measurement through Cloudflare, Akamai, Fastly, CloudFront or Google Cloud.']
+  };
+  var nodes = document.querySelectorAll('.node');
+  nodes.forEach(function (n) {
+    n.addEventListener('click', function () {
+      var d = eco[n.getAttribute('data-k')];
+      nodes.forEach(function (m) { m.setAttribute('aria-pressed', m === n ? 'true' : 'false'); });
+      $('eco-name').textContent = d[1]; $('eco-role').textContent = d[2]; $('eco-when').textContent = d[3];
+      var l = $('eco-link'); l.href = d[0]; l.textContent = 'Learn more about ' + d[1];
+      $('eco-name').textContent = d[1].replace(/^the /, '').replace(/^./, function (c) { return c.toUpperCase(); });
+    });
+  });
+
+
+  /* ---------- light / dark ---------- */
+  function currentTheme() {
+    var t = document.documentElement.getAttribute('data-theme');
+    if (t === 'light' || t === 'dark') return t;
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  function labelTheme() {
+    var next = currentTheme() === 'dark' ? 'light' : 'dark';
+    document.querySelectorAll('[data-theme-toggle]').forEach(function (b) { b.setAttribute('aria-label', 'Switch to ' + next + ' mode'); b.title = 'Switch to ' + next + ' mode'; });
+  }
+  document.querySelectorAll('[data-theme-toggle]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var next = currentTheme() === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      try { localStorage.setItem('gtm-theme', next); } catch (e) {}
+      labelTheme();
+    });
+  });
+  labelTheme();
+
+  /* ---------- lab: reveal every guide and checkpoint ---------- */
+  var revealBtn = $('reveal-all');
+  revealBtn.addEventListener('click', function () {
+    var on = revealBtn.getAttribute('aria-pressed') !== 'true';
+    document.querySelectorAll('details.guide').forEach(function (d) { d.open = on; });
+    revealBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    revealBtn.textContent = on ? 'Hide all hints and answers' : 'Show all hints and answers';
+  });
+
+  /* ---------- Part III: decision exercise ---------- */
+  var m1 = {
+    leave: 'Possible, but the client asked for better measurement, and the gateway can deliver it on Akamai. The question is how to set it up safely, not whether to.',
+    auto: 'Risky as it stands: Google’s Akamai guide supports only one Google tag configuration, and sites using consent mode must turn off automated script setup. Three containers on consent mode hit both limits. Open the reasoning below.',
+    more: 'Good instinct. The gateway fits, but three containers and consent mode rule out the automated setup as it stands. Open the reasoning below for the questions to ask.'
+  };
+  document.querySelectorAll('input[name="m1"]').forEach(function (r) {
+    r.addEventListener('change', function () { var fb = $('m1-feedback'); fb.textContent = m1[r.value]; fb.hidden = false; });
+  });
+
+  /* ---------- glossary ---------- */
+  var terms = $('terms'), quizBtn = $('quiz-btn');
+  quizBtn.addEventListener('click', function () {
+    var on = !terms.classList.contains('quiz');
+    terms.classList.toggle('quiz', on);
+    terms.querySelectorAll('.term').forEach(function (t) { t.classList.remove('revealed'); });
+    quizBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    quizBtn.textContent = on ? 'Show all definitions' : 'Quiz me';
+    $('quiz-note').textContent = on ? 'Select a card to check your answer.' : 'Hides the definitions. Select a card to check yourself.';
+  });
+  terms.querySelectorAll('.term').forEach(function (t) {
+    t.addEventListener('click', function () { if (terms.classList.contains('quiz')) t.classList.toggle('revealed'); });
+  });
+
+  /* ---------- progress, saved in this browser ---------- */
+  var boxes = document.querySelectorAll('.check input');
+  var answers = document.querySelectorAll('[data-answer]');
+  var validChecks = {}; boxes.forEach(function (b) { validChecks[b.id] = true; });
+
+  function setSync(text, isShared) {
+    document.querySelectorAll('[data-sync]').forEach(function (el) { el.textContent = text; el.classList.toggle('shared', !!isShared); });
+  }
+  setSync('Saved in this browser.', true);
+
+  function saveLocal() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+  function save(delay) {
+    saveLocal(); updateStats();
+  }
+  function applyState() {
+    boxes.forEach(function (b) { b.checked = !!state.checks[b.id]; });
+    answers.forEach(function (a) { var k = a.getAttribute('data-answer'); a.value = typeof state.answers[k] === 'string' ? state.answers[k] : ''; });
+    updateStats();
+  }
+
+  boxes.forEach(function (b) { b.addEventListener('change', function () { state.checks[b.id] = b.checked; save(0); }); });
+  answers.forEach(function (a) { a.addEventListener('input', function () { state.answers[a.getAttribute('data-answer')] = a.value; save(900); }); });
+
+  var resetBtn = $('reset-checks'), resetArmed = null;
+  resetBtn.addEventListener('click', function () {
+    if (!resetArmed) {
+      resetBtn.textContent = 'Select again to clear all';
+      resetArmed = setTimeout(function () { resetArmed = null; resetBtn.textContent = 'Clear ticks'; }, 3000);
+      return;
+    }
+    clearTimeout(resetArmed); resetArmed = null; resetBtn.textContent = 'Clear ticks';
+    state.checks = {}; boxes.forEach(function (b) { b.checked = false; }); save(0);
+  });
+
+  function countChecks(c) { var n = 0; if (c && typeof c === 'object') Object.keys(c).forEach(function (k) { if (validChecks[k] && c[k] === true) n++; }); return n; }
+  function countAnswers(a) { var n = 0; if (a && typeof a === 'object') ['1', '2', '3', '4', '5'].forEach(function (k) { if (typeof a[k] === 'string' && a[k].trim()) n++; }); return n; }
+
+  function updateStats() {
+    var done = countChecks(state.checks), total = boxes.length, pct = Math.round(done / total * 100) + '%';
+    $('check-count').textContent = done + ' of ' + total + ' done';
+    $('check-fill').style.width = pct; $('mini-fill').style.width = pct;
+    $('mini-count').textContent = done + ' / ' + total;
+    $('stat-checks').textContent = done + ' / ' + total;
+    var labDone = 0;
+    answers.forEach(function (a) {
+      var k = a.getAttribute('data-answer'), has = a.value.trim().length > 0, st = document.querySelector('[data-status="' + k + '"]');
+      if (has) labDone++;
+      if (st) { st.textContent = has ? 'Answered' : 'Not started'; st.classList.toggle('done', has); }
+    });
+    $('stat-lab').textContent = labDone + ' / ' + answers.length;
+  }
+
+  applyState();
+})();
+</script>
+</body>
+</html>

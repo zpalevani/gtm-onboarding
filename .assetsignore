@@ -1,0 +1,8 @@
+# Files in the repo that should not be served on the website
+README.md
+wrangler.jsonc
+wrangler.toml
+.assetsignore
+.git
+.gitignore
+node_modules
