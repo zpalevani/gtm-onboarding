@@ -2,7 +2,7 @@
 
 An onboarding reference and hands-on workbook for teams learning Google Tag Manager. It is a single static page that reads as a scrolling guide or runs as a slide deck (press **P**, then use the arrow keys).
 
-Live at https://gtm-onboarding.zarapalevani.com (once deployed)
+Live at https://gtm-onboarding.zarapalevani.com
 
 ## What's inside
 
